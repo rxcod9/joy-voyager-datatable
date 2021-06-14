@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as TCGVoyagerBaseController;
-use TCG\Voyager\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 
 class VoyagerBaseController extends TCGVoyagerBaseController
