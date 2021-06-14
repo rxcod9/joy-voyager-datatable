@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/rxcod9/joy-voyager-datatable.svg?style=flat-square)](https://github.com/rxcod9/joy-voyager-datatable/releases)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/rxcod9/joy-voyager-datatable/run-tests?label=tests)
-[![Total Downloads](https://img.shields.io/packagist/dt/rxcod9/joy-voyager-datatable.svg?style=flat-square)](https://packagist.org/packages/rxcod9/joy-voyager-datatable)
+[![Total Downloads](https://img.shields.io/packagist/dt/rxcod9/joy-voyager-datatable.svg?style=flat-square)](https://packagist.org/packages/joy/voyager-datatable)
 
 
 ## Documentation
