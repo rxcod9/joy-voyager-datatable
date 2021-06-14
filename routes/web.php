@@ -33,6 +33,7 @@ Route::group(['prefix' => config('joy-voyager-datatable.admin_prefix', 'admin')]
                     $breadController = $namespacePrefix.'VoyagerBaseController';
 
                     Route::get($dataType->slug . '/datatable', $breadController.'@datatable')->name($dataType->slug.'.datatable');
+                    Route::get($dataType->slug . '/ajax', $breadController.'@ajax')->name($dataType->slug.'.ajax');
                 }
             } catch (\InvalidArgumentException $e) {
                 throw new \InvalidArgumentException("Custom routes hasn't been configured because: ".$e->getMessage(), 1);

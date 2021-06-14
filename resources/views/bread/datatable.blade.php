@@ -268,8 +268,8 @@
                     ],
                     "processing" => true,
                     "serverSide" => true,
-                    "ajax" => route('voyager.'.$dataType->slug.'.datatable'),
-                    "columns" => \abcAbcXyz($dataType),
+                    "ajax" => route('voyager.'.$dataType->slug.'.ajax'),
+                    "columns" => \dataTypeTableColumns($dataType, $showCheckboxColumn),
                 ],
                 config('voyager.dashboard.data_tables', []))
             , true) !!});
