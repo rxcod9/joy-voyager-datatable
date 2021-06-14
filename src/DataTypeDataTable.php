@@ -2,17 +2,9 @@
 
 namespace Joy\VoyagerDatatable;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Models\DataType;
 use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Exceptions\Exception;
 
 class DataTypeDataTable extends EloquentDataTable
 {
