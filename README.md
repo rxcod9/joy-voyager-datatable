@@ -1,9 +1,48 @@
 # Joy VoyagerDatatable
 
+This [Laravel](https://laravel.com/)/[Voyager](https://voyager.devdojo.com/) module adds DataTable to Voyager.
+
+By 🐼 [Ramakant Gangwar](https://github.com/rxcod9).
+
 [![Latest Version](https://img.shields.io/github/v/release/rxcod9/joy-voyager-datatable?style=flat-square)](https://github.com/rxcod9/joy-voyager-datatable/releases)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/rxcod9/joy-voyager-datatable/run-tests?label=tests)
 [![Total Downloads](https://img.shields.io/packagist/dt/joy/voyager-datatable.svg?style=flat-square)](https://packagist.org/packages/joy/voyager-datatable)
 
+---
+
+## Prerequisites
+
+*   Composer Installed
+*   [Install Laravel](https://laravel.com/docs/installation)
+*   [Install Voyager](https://github.com/the-control-group/voyager)
+
+---
+
+## Installation
+
+```bash
+# 1. Require this Package in your fresh Laravel/Voyager project
+composer require joy/voyager-datatable
+
+# 2. Publish
+php artisan vendor:publish --provider="Joy\VoyagerDatatable\VoyagerDatatableServiceProvider"
+```
+
+---
+
+## Usage
+
+Installation generates a new route "datatable" [``voyager.{slug}.datatable``] for BREADs, which is also available through url ``/admin/slug/datatable``.
+
+---
+
+## Views Customization
+
+In order to override views delivered by Voyager DataTable, copy contents from ``vendor/joy/voyager-datatable/resources/views`` to the ``views/vendor/joy-voyager-datatable`` directory of your Laravel installation.
+
+## Working Example
+
+You can try laravel demo example from [https://github.com/rxcod9/joy-voyager-datatable-laravel-demo](https://github.com/rxcod9/joy-voyager-datatable-laravel-demo).
 
 ## Documentation
 

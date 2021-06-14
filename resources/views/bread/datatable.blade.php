@@ -282,6 +282,7 @@
                 })
             @endif
             $('.select_all').on('click', function(e) {
+                e.stopPropagation();
                 $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
             });
         });

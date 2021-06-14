@@ -3,15 +3,17 @@
 use TCG\Voyager\Models\DataRow;
 use TCG\Voyager\Models\DataType;
 
-if (! function_exists('dataTypeTableColumns')) {
+if (!function_exists('dataTypeTableColumns')) {
     /**
      * Helper to get dataType dataTable columns.
      */
     function dataTypeTableColumns(DataType $dataType, bool $showCheckboxColumn): array
     {
         $columns = $showCheckboxColumn ? [[
-            'data' => 'id',
-            'name' => 'id',
+            'data'       => 'index',
+            'name'       => 'index',
+            'orderable'  => true,
+            'searchable' => false
         ]] : [];
         $browseColumns = $dataType->browseRows->map(function (DataRow $row) {
             return [
@@ -23,8 +25,11 @@ if (! function_exists('dataTypeTableColumns')) {
         })->toArray();
 
         $actionColumns = [[
-            'data' => 'action',
-            'name' => 'action',
+            'data'       => 'action',
+            'name'       => 'action',
+            'orderable'  => false,
+            'searchable' => false,
+            'class'      => 'no-sort no-click bread-actions',
         ]];
 
         return array_merge($columns, $browseColumns, $actionColumns);
