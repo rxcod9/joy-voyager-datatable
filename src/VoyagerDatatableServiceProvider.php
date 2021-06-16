@@ -76,9 +76,9 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
         foreach ($engines as $engine => $class) {
             $engine = Str::camel($engine);
 
-            if (! method_exists(DataTables::class, $engine) && ! DataTables::hasMacro($engine)) {
+            if (!method_exists(DataTables::class, $engine) && !DataTables::hasMacro($engine)) {
                 DataTables::macro($engine, function () use ($class) {
-                    if (! call_user_func_array([$class, 'canCreate'], func_get_args())) {
+                    if (!call_user_func_array([$class, 'canCreate'], func_get_args())) {
                         throw new \InvalidArgumentException();
                     }
 
@@ -100,7 +100,6 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
         $this->registerCommands();
     }
 
-
     /**
      * Register publishables.
      *
@@ -110,21 +109,21 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
     {
         $this->publishes(
             [
-            __DIR__ . '/../config/voyager-datatable.php' => config_path('joy-voyager-datatable.php'),
+                __DIR__ . '/../config/voyager-datatable.php' => config_path('joy-voyager-datatable.php'),
             ],
             'config'
         );
 
         $this->publishes(
             [
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/joy-voyager-datatable'),
+                __DIR__ . '/../resources/views' => resource_path('views/vendor/joy-voyager-datatable'),
             ],
             'views'
         );
 
         $this->publishes(
             [
-            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/joy-voyager-datatable'),
+                __DIR__ . '/../resources/lang' => resource_path('lang/vendor/joy-voyager-datatable'),
             ],
             'translations'
         );
