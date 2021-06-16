@@ -1,6 +1,6 @@
 {
     "name": "joy/voyager-datatable",
-    "description": "Joy VoyagerDatatable",
+    "description": "joy voyager datatable",
     "keywords": [
         "joy",
         "voyager-datatable",
@@ -20,7 +20,8 @@
         "php": "^7.4|^8.0",
         "illuminate/support": "^7|^8",
         "larapack/hooks": "^1.0.5",
-        "tcg/voyager": "^1.4"
+        "tcg/voyager": "^1.4",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
