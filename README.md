@@ -1,6 +1,6 @@
 # Joy VoyagerDatatable
 
-This [Laravel](https://laravel.com/)/[Voyager](https://voyager.devdojo.com/) module adds Yajra DataTable to Voyager.
+This [Laravel](https://laravel.com/)/[Voyager](https://voyager.devdojo.com/) module adds Yajra Async/Ajax DataTable to Voyager.
 
 By 🐼 [Ramakant Gangwar](https://github.com/rxcod9).
 
