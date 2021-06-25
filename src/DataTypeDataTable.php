@@ -16,7 +16,7 @@ class DataTypeDataTable extends EloquentDataTable
     /**
      * Can the DataTable engine be created with these parameters.
      *
-     * @param mixed $source
+     * @param  mixed $source
      * @return bool
      */
     public static function canCreate($source)

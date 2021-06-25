@@ -266,7 +266,7 @@ class VoyagerBaseController extends TCGVoyagerBaseController
         // Define orderColumn
         $orderColumn = [];
         if ($orderBy) {
-            $index       = $dataType->browseRows->where('field', $orderBy)->keys()->first()
+            $index = $dataType->browseRows->where('field', $orderBy)->keys()->first()
                 + ($showCheckboxColumn ? 1 : 0);
             $orderColumn = [[$index, $sortOrder ?? 'desc']];
         }

@@ -1,8 +1,10 @@
 # Joy VoyagerDatatable
 
-This [Laravel](https://laravel.com/)/[Voyager](https://voyager.devdojo.com/) module adds Yajra DataTable to Voyager.
+This [Laravel](https://laravel.com/)/[Voyager](https://voyager.devdojo.com/) module adds Yajra Async/Ajax DataTable to Voyager.
 
 By 🐼 [Ramakant Gangwar](https://github.com/rxcod9).
+
+![Screenshot](https://raw.githubusercontent.com/rxcod9/joy-voyager-datatable/main/cover.jpg)
 
 [![Latest Version](https://img.shields.io/github/v/release/rxcod9/joy-voyager-datatable?style=flat-square)](https://github.com/rxcod9/joy-voyager-datatable/releases)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/rxcod9/joy-voyager-datatable/run-tests?label=tests)
@@ -42,7 +44,7 @@ In order to override views delivered by Voyager DataTable, copy contents from ``
 
 ## Working Example
 
-You can try laravel demo example from [https://github.com/rxcod9/joy-voyager-datatable-laravel-demo](https://github.com/rxcod9/joy-voyager-datatable-laravel-demo).
+You can try laravel demo example from [https://github.com/rxcod9/joy-voyager-datatable-laravel-demo](https://github.com/rxcod9/joy-voyager-datatable-laravel-demo) and a demo is hosted here [https://joy-voyager-datatable.herokuapp.com/admin/users/datatable](https://joy-voyager-datatable.herokuapp.com/admin/users/datatable).
 
 ## Documentation
 
