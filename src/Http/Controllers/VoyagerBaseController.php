@@ -2,8 +2,8 @@
 
 namespace Joy\VoyagerDatatable\Http\Controllers;
 
-use Joy\VoyagerDatatable\Traits\AjaxAction;
-use Joy\VoyagerDatatable\Traits\IndexAction;
+use Joy\VoyagerDatatable\Http\Traits\AjaxAction;
+use Joy\VoyagerDatatable\Http\Traits\IndexAction;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as TCGVoyagerBaseController;
 
 class VoyagerBaseController extends TCGVoyagerBaseController

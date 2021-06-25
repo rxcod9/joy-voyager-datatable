@@ -1,6 +1,6 @@
 <?php
 
-namespace Joy\VoyagerDatatable\Traits;
+namespace Joy\VoyagerDatatable\Http\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
