@@ -29,7 +29,7 @@ class VoyagerBaseController extends TCGVoyagerBaseController
     //
     //****************************************
 
-    public function datatable(Request $request)
+    public function index(Request $request)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);

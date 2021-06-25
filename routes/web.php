@@ -31,7 +31,7 @@ Route::group(['prefix' => config('joy-voyager-datatable.admin_prefix', 'admin')]
                 foreach (Voyager::model('DataType')::all() as $dataType) {
                     $breadController = $namespacePrefix.'VoyagerBaseController';
 
-                    Route::get($dataType->slug . '/datatable', $breadController.'@datatable')->name($dataType->slug.'.datatable');
+                    Route::get($dataType->slug . '/datatable', $breadController.'@index')->name($dataType->slug.'.datatable');
                     Route::get($dataType->slug . '/ajax', $breadController.'@ajax')->name($dataType->slug.'.ajax');
                 }
             } catch (\InvalidArgumentException $e) {
