@@ -20,12 +20,12 @@ use TCG\Voyager\Facades\Voyager;
 
 Route::group(['prefix' => config('joy-voyager-datatable.admin_prefix', 'admin')], function () {
     Route::group(['as' => 'voyager.'], function () {
-        event(new Routing());
+        // event(new Routing()); @deprecated
 
         $namespacePrefix = '\\'.config('joy-voyager-datatable.controllers.namespace').'\\';
 
         Route::group(['middleware' => 'admin.user'], function () use ($namespacePrefix) {
-            event(new RoutingAdmin());
+            // event(new RoutingAdmin()); @deprecated
 
             try {
                 foreach (Voyager::model('DataType')::all() as $dataType) {
@@ -40,9 +40,9 @@ Route::group(['prefix' => config('joy-voyager-datatable.admin_prefix', 'admin')]
                 // do nothing, might just be because table not yet migrated.
             }
 
-            event(new RoutingAdminAfter());
+            // event(new RoutingAdminAfter()); @deprecated
         });
 
-        event(new RoutingAfter());
+        // event(new RoutingAfter()); @deprecated
     });
 });

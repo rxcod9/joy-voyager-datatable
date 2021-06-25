@@ -14,7 +14,7 @@ use Yajra\DataTables\Utilities\Config;
  * @category  Package
  * @package   JoyVoyagerDatatable
  * @author    Ramakant Gangwar <gangwar.ramakant@gmail.com>
- * @copyright 2020 Copyright (c) Ramakant Gangwar (https://github.com/rxcod9)
+ * @copyright 2021 Copyright (c) Ramakant Gangwar (https://github.com/rxcod9)
  * @license   http://github.com/rxcod9/joy-voyager-datatable/blob/main/LICENSE New BSD License
  * @link      https://github.com/rxcod9/joy-voyager-datatable
  */
