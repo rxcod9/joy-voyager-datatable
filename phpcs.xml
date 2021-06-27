@@ -19,6 +19,7 @@
     on the command line will ignore all file tags.
     -->
     <file>src</file>
+    <file>tests</file>
 
     <!--
        You can hard-code ignore patterns directly into your
@@ -27,7 +28,16 @@
 
     -->
     <exclude-pattern>*/database/*</exclude-pattern>
+    <exclude-pattern>*/cache/*</exclude-pattern>
+    <exclude-pattern>*/*.js</exclude-pattern>
+    <exclude-pattern>*/*.css</exclude-pattern>
+    <exclude-pattern>*/*.xml</exclude-pattern>
     <exclude-pattern>*/*.blade.php</exclude-pattern>
+    <exclude-pattern>*/autoload.php</exclude-pattern>
+    <exclude-pattern>*/storage/*</exclude-pattern>
+    <exclude-pattern>*/docs/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/migrations/*</exclude-pattern>
 
     <!--
        You can hard-code command line values into your custom standard.
