@@ -32,4 +32,25 @@ return [
         // 'resource'   => Yajra\DataTables\ApiResourceDataTable::class,
         // 'resource'   => Yajra\DataTables\ApiResourceDataTable::class,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filters config
+    |--------------------------------------------------------------------------
+    |
+    | Here you can specify voyager datatable filters settings
+    |
+    */
+    'filters'        => [
+        'hidden'   => [
+            'password',
+        ]
+    ],
+    'users'        => [
+        'filters' => [
+            'hidden'   => [
+                'remember_token',
+            ]
+        ],
+    ],
 ];
