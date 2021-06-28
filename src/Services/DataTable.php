@@ -130,9 +130,21 @@ class DataTable
         // which will be used to filter data by global search
         if (!modelHasScope($modelClass, 'globalSearch')) {
             Log::debug('Your model must implement scopeGlobalSearch');
-            $dataTable->filter(function ($query) use ($request) {
+            $model = app($dataType->model_name);
+            $dataTable->filter(function ($query) use ($request, $model) {
                 if ($request->has('search.value') && $request->input('search.value')) {
-                    $query->whereKey($request->input('search.value'));
+                    switch ($model->getKeyType()) {
+                        case 'int':
+                            $query->whereKey((int) $request->input('search.value'));
+                            break;
+                        case 'string':
+                            $query->whereKey($request->input('search.value'));
+                            break;
+
+                        default:
+                            // code...
+                            break;
+                    }
                 }
             });
             return;
