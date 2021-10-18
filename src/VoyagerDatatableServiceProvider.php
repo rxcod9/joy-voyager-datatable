@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
-use Yajra\DataTables\Utilities\Config;
 
 /**
  * Class VoyagerDatatableServiceProvider
