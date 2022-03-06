@@ -5,3 +5,4 @@
 CHANGELOG.md export-ignore
 composer.lock -merge
 package-lock.json -merge
+.php-cs-fixer.cache -merge
