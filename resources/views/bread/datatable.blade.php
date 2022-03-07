@@ -162,7 +162,7 @@
                 })
             })
         @endif
-        $('input[name="row_id"]').on('change', function () {
+        $('#dataTable').on('click', 'input[name="row_id"]', function (e) {
             var ids = [];
             $('input[name="row_id"]').each(function() {
                 if ($(this).is(':checked')) {

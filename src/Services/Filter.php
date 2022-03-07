@@ -23,9 +23,22 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
+        if (!$keyword) {
+            return;
+        }
+
         // if (isset($row->details->view)) {
         // one must override the filter as well
         // }
+
+        // Note:: you can override filter for each column by adding scope{field}
+        // i.e. for age column you can add scopeAge and for created_at you can add scopeCreatedAt
+        if (modelHasScope($dataType->model_name, $row->field)) {
+            $query->scopes([
+                Str::camel($row->field) => [$keyword],
+            ]);
+            return;
+        }
 
         // You can disable filters by row type
         if (in_array($row->type, config('joy-voyager-datatable.filters.hidden', ['hidden']))) {
