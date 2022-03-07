@@ -19,7 +19,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "illuminate/support": "^7|^8",
-        "joy/voyager-core": "dev-main",
+        "joy/voyager-core": "^1.0",
         "larapack/hooks": "^1.0.5",
         "tcg/voyager": "^1.4",
         "yajra/laravel-datatables-oracle": "~9.0"
