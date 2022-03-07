@@ -127,7 +127,7 @@
                     $('.side-body').data('multilingual').init();
                 })
             @endif
-            $('.select_all').on('click', function(e) {
+            $('#dataTable').on('click', '.select_all', function (e) {
                 e.stopPropagation();
                 $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
             });

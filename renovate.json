@@ -1,5 +1,14 @@
 {
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "rangeStrategy": "replace"
+    }
+  ],
   "extends": [
     "config:base"
   ]
 }
+
