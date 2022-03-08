@@ -105,7 +105,7 @@
     <script>
         $(document).ready(function () {
 
-            var table = $('#dataTable').DataTable({!! json_encode(
+            var options = {!! json_encode(
                 array_merge([
                     "order" => $orderColumn,
                     "language" => __('voyager::datatable'),
@@ -118,7 +118,23 @@
                     "columns" => \dataTypeTableColumns($dataType, $showCheckboxColumn),
                 ],
                 config('voyager.dashboard.data_tables', []))
-            , true) !!});
+            , true) !!};
+            
+            options = $.extend(
+                options,
+                {
+                    "drawCallback": function( settings ) {
+                        $('.select_all').off('click');
+                        $('.select_all').on('click', function(e) {
+                            console.log('clicked');
+                            e.stopPropagation();
+                            $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
+                        });
+                    }
+                }
+            );
+
+            var table = $('#dataTable').DataTable(options);
 
             @if ($isModelTranslatable)
                 $('.side-body').multilingual();
@@ -127,7 +143,9 @@
                     $('.side-body').data('multilingual').init();
                 })
             @endif
-            $('#dataTable').on('click', '.select_all', function (e) {
+            $('.select_all').off('click');
+            $('.select_all').on('click', function(e) {
+                console.log('clicked');
                 e.stopPropagation();
                 $('input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
             });
@@ -162,7 +180,7 @@
                 })
             })
         @endif
-        $('#dataTable').on('click', 'input[name="row_id"]', function (e) {
+        $('#dataTable').on('change', 'input[name="row_id"]', function (e) {
             var ids = [];
             $('input[name="row_id"]').each(function() {
                 if ($(this).is(':checked')) {

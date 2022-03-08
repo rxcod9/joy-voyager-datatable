@@ -11,9 +11,10 @@ if (!function_exists('dataTypeTableColumns')) {
      */
     function dataTypeTableColumns(DataType $dataType, bool $showCheckboxColumn): array
     {
+        $model = app($dataType->model_name);
         $columns = $showCheckboxColumn ? [[
             'data'       => 'index',
-            'name'       => 'index',
+            'name'       => $model->getKeyName(),
             'orderable'  => true,
             'searchable' => false
         ]] : [];
