@@ -153,7 +153,7 @@
 
 
         var deleteFormAction;
-        $('td').on('click', '.delete', function (e) {
+        $('#dataTable').on('click', 'td .delete', function (e) {
             $('#delete_form')[0].action = '{{ route('voyager.'.$dataType->slug.'.destroy', '__id') }}'.replace('__id', $(this).data('id'));
             $('#delete_modal').modal('show');
         });
