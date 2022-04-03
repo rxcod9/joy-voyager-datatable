@@ -20,7 +20,8 @@ class Column
         DataType $dataType
     ): string {
         return '<input type="checkbox" name="row_id" id="checkbox_'
-            . $data->getKey() . '" value="' . $data->getKey() . '" />';
+            . $data->getKey() . '" title="'
+            . ($data->name ?? '') . '" value="' . $data->getKey() . '" />';
     }
 
     /**

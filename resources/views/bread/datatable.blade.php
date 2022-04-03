@@ -44,7 +44,7 @@
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="table-responsive">
-                            <table id="dataTable" class="table table-hover table-condensed">
+                            <table id="dataTable" class="table table-hover table-responsive">
                                 <thead>
                                     <tr>
                                         @if($showCheckboxColumn)
