@@ -17,8 +17,8 @@
         "role": "Tech Lead & Architect"
     }],
     "require": {
-        "php": "^7.3|^8.0",
-        "illuminate/support": "^7|^8",
+        "php": "^7.3|^8.0|^9.0",
+        "illuminate/support": "^7|^8|^9",
         "joy/voyager-core": "^1.0",
         "tcg/voyager": "^1.4",
         "yajra/laravel-datatables-oracle": "~9.0"
