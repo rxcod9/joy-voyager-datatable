@@ -161,9 +161,6 @@
         @if($usesSoftDeletes)
             @php
                 $params = [
-                    's' => $search->value,
-                    'filter' => $search->filter,
-                    'key' => $search->key,
                     'order_by' => $orderBy,
                     'sort_order' => $sortOrder,
                 ];
