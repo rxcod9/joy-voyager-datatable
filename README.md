@@ -44,7 +44,7 @@ In order to override views delivered by Voyager DataTable, copy contents from ``
 
 ## Working Example
 
-You can try laravel demo example from [https://github.com/rxcod9/joy-voyager-datatable-laravel-demo](https://github.com/rxcod9/joy-voyager-datatable-laravel-demo) and a demo is hosted here [https://joy-voyager.herokuapp.com/admin/users/datatable](https://joy-voyager.herokuapp.com/admin/users/datatable).
+You can try laravel demo example from [https://github.com/rxcod9/joy-voyager-datatable-laravel-demo](https://github.com/rxcod9/joy-voyager-datatable-laravel-demo) and a demo is hosted here [https://joy-voyager.kodmonk.com/admin/users/datatable](https://joy-voyager.kodmonk.com/admin/users/datatable).
 
 ## Documentation
 
