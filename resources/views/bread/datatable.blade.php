@@ -114,7 +114,7 @@
                     ],
                     "processing" => true,
                     "serverSide" => true,
-                    "ajax" => route('voyager.'.$dataType->slug.'.ajax'),
+                    "ajax" => route('voyager.'.$dataType->slug.'.ajax', ['showSoftDeleted' => $showSoftDeleted]),
                     "columns" => \dataTypeTableColumns($dataType, $showCheckboxColumn),
                 ],
                 config('voyager.dashboard.data_tables', []))
