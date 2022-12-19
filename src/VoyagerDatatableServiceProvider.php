@@ -5,6 +5,8 @@ namespace Joy\VoyagerDatatable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Joy\VoyagerDatatable\View\Components\Datatable;
+use Joy\VoyagerDatatable\View\Components\Datatables as DatatablesComponent;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -39,6 +41,8 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'joy-voyager-datatable');
 
         $this->loadDatatablesEngines();
+
+        $this->bootComponents();
     }
 
     /**
@@ -85,6 +89,16 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
                 });
             }
         }
+    }
+
+    /**
+     * Boot components.
+     */
+    protected function bootComponents(): void
+    {
+        app('blade.compiler')->component('joy-voyager-datatable', Datatable::class);
+        app('blade.compiler')->component('joy-voyager-datatables', DatatablesComponent::class);
+        app('blade.compiler')->componentNamespace('\\Joy\\VoyagerDatatable\\View\\Components', 'joy-voyager-datatable');
     }
 
     /**
