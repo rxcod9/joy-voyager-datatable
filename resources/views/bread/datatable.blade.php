@@ -27,11 +27,7 @@
                 <input type="checkbox" @if ($showSoftDeleted) checked @endif class="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}">
             @endif
         @endcan
-        @foreach($actions as $action)
-            @if (method_exists($action, 'massAction'))
-                @include('voyager::bread.partials.actions', ['action' => $action, 'data' => null])
-            @endif
-        @endforeach
+        @include('joy-voyager-datatable::bread.partials.group-actions', ['actions' => $actions, 'dataType' => $dataType, 'data' => null])
         @include('voyager::multilingual.language-selector')
     </div>
 @stop

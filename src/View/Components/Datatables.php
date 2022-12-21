@@ -24,11 +24,25 @@ class Datatables extends Component
     protected $slugs;
 
     /**
-     * The dataId.
+     * The withLabel.
      *
-     * @var string|null
+     * @var bool|null
      */
-    protected $dataId;
+    protected $withLabel;
+
+    /**
+     * The autoWidth.
+     *
+     * @var bool
+     */
+    protected $autoWidth;
+
+    /**
+     * The columnDefs.
+     *
+     * @var array
+     */
+    protected $columnDefs;
 
     /**
      * The withoutCheckbox.
@@ -45,20 +59,22 @@ class Datatables extends Component
     protected $withoutActions;
 
     /**
-     * The withLabel.
+     * The dataId.
      *
-     * @var bool|null
+     * @var string|null
      */
-    protected $withLabel;
+    protected $dataId;
 
     /**
      * Create the component instance.
      *
      * @param Request     $request
      * @param array       $slugs
+     * @param bool|null   $withLabel
+     * @param bool        $autoWidth
+     * @param array       $columnDefs
      * @param bool|null   $withoutCheckbox
      * @param bool|null   $withoutActions
-     * @param bool|null   $withLabel
      * @param string|null $dataId
      *
      * @return void
@@ -66,16 +82,20 @@ class Datatables extends Component
     public function __construct(
         Request $request,
         array $slugs = [],
+        ?bool $withLabel = true,
+        ?bool $autoWidth = false,
+        ?array $columnDefs = [],
         ?bool $withoutCheckbox = true,
         ?bool $withoutActions = true,
-        ?bool $withLabel = true,
         ?string $dataId = null
     ) {
         $this->request         = $request;
         $this->slugs           = $slugs;
+        $this->withLabel       = $withLabel;
+        $this->autoWidth       = $autoWidth;
+        $this->columnDefs      = $columnDefs;
         $this->withoutCheckbox = $withoutCheckbox;
         $this->withoutActions  = $withoutActions;
-        $this->withLabel       = $withLabel;
         $this->dataId          = $dataId;
     }
 
@@ -95,9 +115,12 @@ class Datatables extends Component
 
         return Voyager::view($view, [
             'dataTypes'       => $dataTypes,
+            'slugs'           => $this->slugs,
+            'withLabel'       => $this->withLabel,
+            'autoWidth'       => $this->autoWidth,
+            'columnDefs'      => $this->columnDefs,
             'withoutCheckbox' => $this->withoutCheckbox,
             'withoutActions'  => $this->withoutActions,
-            'withLabel'       => $this->withLabel,
             'dataId'          => $this->dataId,
         ]);
     }

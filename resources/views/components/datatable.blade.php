@@ -1,7 +1,5 @@
 @php
-    $columnDefs = [
-        ['targets' => 'dt-not-orderable', 'searchable' =>  false, 'orderable' => false],
-    ];
+    array_push($columnDefs, ['targets' => 'dt-not-orderable', 'searchable' =>  false, 'orderable' => false]);
     if($withoutCheckbox) {
         array_push($columnDefs, ['targets' => 'dt-index', 'visible' =>  false]);
     }
@@ -70,6 +68,7 @@
             var options = {!! json_encode(
                 array_merge([
                     "order" => $orderColumn,
+                    "autoWidth" => $autoWidth,
                     "language" => __('voyager::datatable'),
                     "columnDefs" => $columnDefs,
                     "processing" => true,

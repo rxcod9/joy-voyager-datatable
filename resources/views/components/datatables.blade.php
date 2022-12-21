@@ -1,9 +1,11 @@
 @foreach($dataTypes as $dataType)
     <x-joy-voyager-datatable
         :slug="$dataType->slug"
-        :data-id="($dataId ?? 'tables') . '-' . $dataType->slug"
+        :with-label="$withLabel"
+        :auto-width="$autoWidth"
+        :column-defs="$columnDefs"
         :without-checkbox="$withoutCheckbox"
         :without-actions="$withoutActions"
-        :with-label="$withLabel"
+        :data-id="($dataId ?? 'tables') . '-' . $dataType->slug"
     />
 @endforeach

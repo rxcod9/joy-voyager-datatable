@@ -31,18 +31,25 @@ class Datatable extends Component
     protected $slug;
 
     /**
-     * The dataId.
-     *
-     * @var string|null
-     */
-    protected $dataId;
-
-    /**
      * The withLabel.
      *
      * @var bool|null
      */
     protected $withLabel;
+
+    /**
+     * The autoWidth.
+     *
+     * @var bool
+     */
+    protected $autoWidth;
+
+    /**
+     * The columnDefs.
+     *
+     * @var array
+     */
+    protected $columnDefs;
 
     /**
      * The withoutCheckbox.
@@ -59,13 +66,22 @@ class Datatable extends Component
     protected $withoutActions;
 
     /**
+     * The dataId.
+     *
+     * @var string|null
+     */
+    protected $dataId;
+
+    /**
      * Create the component instance.
      *
      * @param Request     $request
      * @param string      $slug
+     * @param bool|null   $withLabel
+     * @param bool        $autoWidth
+     * @param array       $columnDefs
      * @param bool|null   $withoutCheckbox
      * @param bool|null   $withoutActions
-     * @param bool|null   $withLabel
      * @param string|null $dataId
      *
      * @return void
@@ -73,16 +89,20 @@ class Datatable extends Component
     public function __construct(
         Request $request,
         string $slug,
+        ?bool $withLabel = null,
+        ?bool $autoWidth = false,
+        ?array $columnDefs = [],
         ?bool $withoutCheckbox = null,
         ?bool $withoutActions = null,
-        ?bool $withLabel = null,
         ?string $dataId = null
     ) {
         $this->request         = $request;
         $this->slug            = $slug;
+        $this->withLabel       = $withLabel;
+        $this->autoWidth       = $autoWidth;
+        $this->columnDefs      = $columnDefs;
         $this->withoutCheckbox = $withoutCheckbox;
         $this->withoutActions  = $withoutActions;
-        $this->withLabel       = $withLabel;
         $this->dataId          = $dataId;
     }
 
@@ -176,9 +196,11 @@ class Datatable extends Component
             'usesSoftDeletes'     => $usesSoftDeletes,
             'showSoftDeleted'     => $showSoftDeleted,
             'showCheckboxColumn'  => $showCheckboxColumn,
+            'withLabel'           => $this->withLabel,
+            'autoWidth'           => $this->autoWidth,
+            'columnDefs'          => $this->columnDefs,
             'withoutCheckbox'     => $this->withoutCheckbox,
             'withoutActions'      => $this->withoutActions,
-            'withLabel'           => $this->withLabel,
             'dataId'              => $this->dataId,
         ]);
     }

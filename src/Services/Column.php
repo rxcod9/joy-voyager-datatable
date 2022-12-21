@@ -615,16 +615,16 @@ class Column
         $dataType,
         $actions
     ) {
-        $view = '';
-        foreach ($actions as $action) {
-            if (!method_exists($action, 'massAction')) {
-                $view .= view('voyager::bread.partials.actions', [
-                    'action'   => $action,
-                    'dataType' => $dataType,
-                    'data'     => $data,
-                ]);
-            }
+        $view = 'joy-voyager-datatable::bread.partials.single-group-actions';
+
+        if (view()->exists('joy-voyager-datatable::' . $dataType->slug . '.partials.single-group-actions')) {
+            $view = 'joy-voyager-datatable::' . $dataType->slug . '.partials.single-group-actions';
         }
-        return $view;
+
+        return view($view, [
+            'actions'  => $actions,
+            'dataType' => $dataType,
+            'data'     => $data,
+        ]);
     }
 }
