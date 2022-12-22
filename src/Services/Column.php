@@ -17,7 +17,8 @@ class Column
      */
     public function indexColumn(
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         return '<input type="checkbox" name="row_id" id="checkbox_'
             . $data->getKey() . '" title="'
@@ -32,150 +33,151 @@ class Column
     public function handle(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         if (isset($row->details->view)) {
             return $this->columnView(
                 $row,
                 $data,
-                $dataType
+                $dataType,
+                $content
             );
         }
 
-        if ($row->type == 'image') {
-            return $this->columnImage(
-                $row,
-                $data,
-                $dataType
-            );
-        }
+        switch ($row->type) {
+            case 'image':
+                return $this->columnImage(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'relationship':
+                return $this->columnRelationship(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'select_multiple':
+                return $this->columnSelectMultiple(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'multiple_checkbox':
+                return $this->columnMultipleCheckbox(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'select_dropdown':
+            case 'radio_btn':
+                return $this->columnSelectDropdown(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'date':
+            case 'timestamp':
+                return $this->columnDate(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'checkbox':
+                return $this->columnCheckbox(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'color':
+                return $this->columnColor(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'text':
+                return $this->columnText(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'text_area':
+                return $this->columnTextArea(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'file':
+                return $this->columnFile(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'rich_text_box':
+                return $this->columnRichTextBox(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'coordinates':
+                return $this->columnCoordinates(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'multiple_images':
+                return $this->columnMultipleImages(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
+            case 'media_picker':
+                return $this->columnMediaPicker(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
 
-        if ($row->type == 'relationship') {
-            return $this->columnRelationship(
-                $row,
-                $data,
-                $dataType
-            );
+            default:
+                return $this->columnDefault(
+                    $row,
+                    $data,
+                    $dataType,
+                    $content
+                );
+                break;
         }
-
-        if ($row->type == 'select_multiple') {
-            return $this->columnSelectMultiple(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if (
-            $row->type == 'multiple_checkbox'
-            && property_exists($row->details, 'options')
-        ) {
-            return $this->columnMultipleCheckbox(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if (
-            ($row->type == 'select_dropdown' || $row->type == 'radio_btn')
-            && property_exists($row->details, 'options')
-        ) {
-            return $this->columnSelectDropdown(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'date' || $row->type == 'timestamp') {
-            return $this->columnDate(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'checkbox') {
-            return $this->columnCheckbox(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'color') {
-            return $this->columnColor(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'text') {
-            return $this->columnText(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'text_area') {
-            return $this->columnTextArea(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if (
-            $row->type == 'file'
-            && !empty($data->{$row->field})
-        ) {
-            return $this->columnFile(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'rich_text_box') {
-            return $this->columnRichTextBox(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'coordinates') {
-            return $this->columnCoordinates(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'multiple_images') {
-            return $this->columnMultipleImages(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        if ($row->type == 'media_picker') {
-            return $this->columnMediaPicker(
-                $row,
-                $data,
-                $dataType
-            );
-        }
-
-        return $this->columnDefault(
-            $row,
-            $data,
-            $dataType
-        );
     }
 
     /**
@@ -186,13 +188,14 @@ class Column
     protected function columnView(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         return (string) view($row->details->view, [
             'row'      => $row,
             'dataType' => $dataType,
             'data'     => $data,
-            'content'  => $data->{$row->field},
+            'content'  => $content,
             'action'   => 'browse',
             'view'     => 'browse',
             'options'  => $row->details
@@ -207,12 +210,13 @@ class Column
     protected function columnImage(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         return '<img src="' . (
-            !filter_var($data->{$row->field}, FILTER_VALIDATE_URL)
-                ? Voyager::image($data->{$row->field})
-                : $data->{$row->field}
+            !filter_var($content, FILTER_VALIDATE_URL)
+                ? Voyager::image($content)
+                : $content
         ) . '" style="width:100px" />';
     }
 
@@ -224,7 +228,8 @@ class Column
     protected function columnRelationship(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         return (string) view('voyager::formfields.relationship', [
             'view'    => 'browse',
@@ -242,20 +247,21 @@ class Column
     protected function columnSelectMultiple(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         $view = '';
         if (property_exists($row->details, 'relationship')) {
-            foreach ($data->{$row->field} as $item) {
+            foreach ($content as $item) {
                 $view .= $item->{$row->field};
             }
             return $view;
         }
 
         if (property_exists($row->details, 'options')) {
-            if (!empty(json_decode($data->{$row->field}))) {
-                $lastKey = end(array_keys(json_decode($data->{$row->field})));
-                foreach (json_decode($data->{$row->field}) as $key => $item) {
+            if (!empty(json_decode($content))) {
+                $lastKey = end(array_keys(json_decode($content)));
+                foreach (json_decode($content) as $key => $item) {
                     if (@$row->details->options->{$item}) {
                         $view .= $row->details->options->{$item} . ($key !== $lastKey ? ', ' : '');
                     }
@@ -277,12 +283,13 @@ class Column
     protected function columnMultipleCheckbox(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         $view = '';
-        if (@count(json_decode($data->{$row->field})) > 0) {
-            $lastKey = end(array_keys(json_decode($data->{$row->field})));
-            foreach (json_decode($data->{$row->field}) as $key => $item) {
+        if (@count(json_decode($content)) > 0) {
+            $lastKey = end(array_keys(json_decode($content)));
+            foreach (json_decode($content) as $key => $item) {
                 if (@$row->details->options->{$item}) {
                     $view .= $row->details->options->{$item} . ($key !== $lastKey ? ', ' : '');
                 }
@@ -301,9 +308,10 @@ class Column
     protected function columnSelectDropdown(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
-        return $row->details->options->{$data->{$row->field}} ?? '';
+        return $row->details->options->{$content} ?? '';
     }
 
     /**
@@ -314,16 +322,17 @@ class Column
     protected function columnDate(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         if (
             property_exists($row->details, 'format')
-            && null !== $data->{$row->field}
+            && null !== $content
         ) {
-            return Carbon::parse($data->{$row->field})->formatLocalized($row->details->format);
+            return Carbon::parse($content)->formatLocalized($row->details->format);
         }
 
-        return (string) $data->{$row->field};
+        return (string) $content;
     }
 
     /**
@@ -334,19 +343,20 @@ class Column
     protected function columnCheckbox(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         if (
             property_exists($row->details, 'on')
             && property_exists($row->details, 'off')
         ) {
-            if ($data->{$row->field}) {
+            if ($content) {
                 return '<span class="label label-info">' . $row->details->on . '</span>';
             }
             return '<span class="label label-primary">' . $row->details->off . '</span>';
         }
 
-        return (string) $data->{$row->field};
+        return (string) $content;
     }
 
     /**
@@ -357,10 +367,11 @@ class Column
     protected function columnColor(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         return '<span class="badge badge-lg" style="background-color: '
-            . $data->{$row->field} . '">' . $data->{$row->field} . '</span>';
+            . $content . '">' . $content . '</span>';
     }
 
     /**
@@ -371,11 +382,12 @@ class Column
     protected function columnText(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
-        $trimContent = mb_strlen($data->{$row->field}) > 200
-            ? mb_substr($data->{$row->field}, 0, 200) . ' ...'
-            : $data->{$row->field};
+        $trimContent = mb_strlen($content) > 200
+            ? mb_substr($content, 0, 200) . ' ...'
+            : $content;
 
         return $this->translatify(
             (string) $trimContent,
@@ -393,11 +405,12 @@ class Column
     protected function columnTextArea(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
-        $trimContent = mb_strlen($data->{$row->field}) > 200
-            ? mb_substr($data->{$row->field}, 0, 200) . ' ...'
-            : $data->{$row->field};
+        $trimContent = mb_strlen($content) > 200
+            ? mb_substr($content, 0, 200) . ' ...'
+            : $content;
 
         return $this->translatify(
             (string) $trimContent,
@@ -415,15 +428,16 @@ class Column
     protected function columnFile(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         $view = (string) view('voyager::multilingual.input-hidden-bread-browse', [
             'data' => $data,
             'row'  => $row
         ]);
 
-        if (json_decode($data->{$row->field}) !== null) {
-            foreach (json_decode($data->{$row->field}) as $file) {
+        if (json_decode($content) !== null) {
+            foreach (json_decode($content) as $file) {
                 $view .= '<a href="' . (
                     Storage::disk(config('voyager.storage.disk'))->url($file->download_link) ?: ''
                 ) . '" target="_blank">' . ($file->original_name ?: '') . '</a><br/>';
@@ -432,7 +446,7 @@ class Column
         }
 
         return '<a href="' . (
-            Storage::disk(config('voyager.storage.disk'))->url($data->{$row->field})
+            Storage::disk(config('voyager.storage.disk'))->url($content)
         ) . '" target="_blank">Download</a>';
     }
 
@@ -444,11 +458,12 @@ class Column
     protected function columnRichTextBox(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
-        $trimContent = mb_strlen(strip_tags($data->{$row->field}, '<b><i><u>')) > 200
-            ? mb_substr(strip_tags($data->{$row->field}, '<b><i><u>'), 0, 200) . ' ...'
-            : strip_tags($data->{$row->field}, '<b><i><u>');
+        $trimContent = mb_strlen(strip_tags($content, '<b><i><u><a>')) > 200
+            ? mb_substr(strip_tags($content, '<b><i><u><a>'), 0, 200) . ' ...'
+            : strip_tags($content, '<b><i><u><a>');
 
         return $this->translatify(
             (string) $trimContent,
@@ -466,7 +481,8 @@ class Column
     protected function columnCoordinates(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         return (string) view('voyager::partials.coordinates-static-image');
     }
@@ -479,10 +495,11 @@ class Column
     protected function columnMultipleImages(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         $view   = '';
-        $images = json_decode($data->{$row->field});
+        $images = json_decode($content);
         if ($images) {
             $images = array_slice($images, 0, 3);
             foreach ($images as $image) {
@@ -505,13 +522,14 @@ class Column
     protected function columnMediaPicker(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ): string {
         $view = '';
-        if (is_array($data->{$row->field})) {
-            $files = $data->{$row->field};
+        if (is_array($content)) {
+            $files = $content;
         } else {
-            $files = json_decode($data->{$row->field});
+            $files = json_decode($content);
         }
 
         if ($files) {
@@ -547,18 +565,18 @@ class Column
             return trans_choice('voyager::media.files', 0);
         }
 
-        if ($data->{$row->field} != '') {
+        if ($content != '') {
             if (
                 property_exists($row->details, 'show_as_images')
                 && $row->details->show_as_images
             ) {
                 return '<img src="' . (
-                    !filter_var($data->{$row->field}, FILTER_VALIDATE_URL)
-                        ? Voyager::image($data->{$row->field})
-                        : $data->{$row->field}
+                    !filter_var($content, FILTER_VALIDATE_URL)
+                        ? Voyager::image($content)
+                        : $content
                 ) . '" style="width:50px" />';
             }
-            return (string) $data->{$row->field};
+            return (string) $content;
         }
 
         return trans_choice('voyager::media.files', 0);
@@ -572,10 +590,11 @@ class Column
     protected function columnDefault(
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
+        $content = null
     ) {
         return $this->translatify(
-            (string) $data->{$row->field},
+            (string) $content,
             $row,
             $data,
             $dataType
@@ -591,7 +610,7 @@ class Column
         string $content,
         DataRow $row,
         $data,
-        DataType $dataType
+        DataType $dataType,
     ) {
         $model = app($dataType->model_name);
 

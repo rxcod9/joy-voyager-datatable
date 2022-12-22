@@ -94,10 +94,11 @@ class DataTable
 
         foreach ($dataType->browseRows as $row) {
             $dataTable->addColumn($row->field, function ($data) use ($row, $dataType) {
+                $content = $data->{$row->field};
                 if ($data->{$row->field . '_browse'}) {
-                    $data->{$row->field} = $data->{$row->field . '_browse'};
+                    $data->{$row->field} = $content = $data->{$row->field . '_browse'};
                 }
-                return $this->column->handle($row, $data, $dataType);
+                return $this->column->handle($row, $data, $dataType, $content);
             });
         }
 
