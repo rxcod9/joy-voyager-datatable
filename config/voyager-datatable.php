@@ -53,4 +53,88 @@ return [
             ]
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Quick Edit/Add/Preview config
+    |--------------------------------------------------------------------------
+    |
+    | Here you can specify voyager datatable quick edit-add-preview settings
+    |
+    */
+
+    'quick-edit' => [
+        /*
+        * If enabled for voyager-datatable quick edit package.
+        */
+        'enabled' => env('VOYAGER_DATATABLE_QUICK_EDIT_ENABLED', true),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is enabled
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_EDIT_ALLOWED_SLUGS', '*'))),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is not allowed
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'not_allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_EDIT_NOT_ALLOWED_SLUGS', ''))),
+    ],
+
+    'quick-add' => [
+        /*
+        * If enabled for voyager-datatable quick add package.
+        */
+        'enabled' => env('VOYAGER_DATATABLE_QUICK_ADD_ENABLED', true),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is enabled
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_ADD_ALLOWED_SLUGS', '*'))),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is not allowed
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'not_allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_ADD_NOT_ALLOWED_SLUGS', ''))),
+    ],
+
+    'quick-preview' => [
+        /*
+        * If enabled for voyager-datatable quick preview package.
+        */
+        'enabled' => env('VOYAGER_DATATABLE_QUICK_PREVIEW_ENABLED', true),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is enabled
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_PREVIEW_ALLOWED_SLUGS', '*'))),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is not allowed
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'not_allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_PREVIEW_NOT_ALLOWED_SLUGS', ''))),
+    ]
 ];

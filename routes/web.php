@@ -34,6 +34,14 @@ Route::group(['prefix' => config('joy-voyager-datatable.admin_prefix', 'admin')]
                     Route::get($dataType->slug . '/datatable', $breadController.'@index')->name($dataType->slug.'.datatable');
                     Route::get($dataType->slug . '/ajax', $breadController.'@ajax')->name($dataType->slug.'.ajax');
                     Route::post($dataType->slug . '/ajax', $breadController.'@ajax')->name($dataType->slug.'.post-ajax');
+
+                    Route::get($dataType->slug . '/{id}/preview', $breadController.'@preview')->name($dataType->slug.'.preview');
+
+                    Route::get($dataType->slug . '/quick-create', $breadController.'@quickCreate')->name($dataType->slug.'.quick-create');
+                    Route::post($dataType->slug . '/quick-store', $breadController.'@quickStore')->name($dataType->slug.'.quick-store');
+
+                    Route::get($dataType->slug . '/{id}/quick-edit', $breadController.'@quickEdit')->name($dataType->slug.'.quick-edit');
+                    Route::post($dataType->slug . '/{id}/quick-update', $breadController.'@quickUpdate')->name($dataType->slug.'.quick-update');
                 }
             } catch (\InvalidArgumentException $e) {
                 throw new \InvalidArgumentException("Custom routes hasn't been configured because: ".$e->getMessage(), 1);

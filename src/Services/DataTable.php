@@ -102,7 +102,7 @@ class DataTable
             });
         }
 
-        $dataTable->addColumn('action', function ($data) use ($dataType, $actions) {
+        $dataTable->addColumn('actions', function ($data) use ($dataType, $actions) {
             return $this->column->actions($data, $dataType, $actions);
         });
 

@@ -28,8 +28,8 @@ if (!function_exists('dataTypeTableColumns')) {
         })->toArray();
 
         $actionColumns = [[
-            'data'       => 'action',
-            'name'       => 'action',
+            'data'       => 'actions',
+            'name'       => 'actions',
             'orderable'  => false,
             'searchable' => false,
             'class'      => 'no-sort no-click bread-actions',
@@ -55,7 +55,7 @@ if (!function_exists('dataTypeRawColumns')) {
             return $row->field;
         })->toArray();
 
-        $actionColumns = ['action'];
+        $actionColumns = ['actions'];
 
         return array_merge($columns, $browseColumns, $actionColumns);
     }

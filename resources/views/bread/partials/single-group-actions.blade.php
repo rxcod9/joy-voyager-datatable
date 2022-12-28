@@ -5,6 +5,8 @@
             '*RestoreAction',
             '*EditAction',
             '*ViewAction',
+            '*QuickEditAction',
+            '*PreviewAction',
             '*ExportAction',
         ], get_class($action));
     });
@@ -14,6 +16,8 @@
             '*RestoreAction',
             '*EditAction',
             '*ViewAction',
+            '*QuickEditAction',
+            '*PreviewAction',
             '*ExportAction',
         ], get_class($action));
     });

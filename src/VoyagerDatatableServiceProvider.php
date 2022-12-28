@@ -7,6 +7,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Joy\VoyagerDatatable\View\Components\Datatable;
 use Joy\VoyagerDatatable\View\Components\Datatables as DatatablesComponent;
+use Joy\VoyagerDatatable\View\Components\QuickAdd;
+use TCG\Voyager\Facades\Voyager;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -28,6 +30,9 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Voyager::addAction(\Joy\VoyagerDatatable\Actions\PreviewAction::class);
+        Voyager::addAction(\Joy\VoyagerDatatable\Actions\QuickEditAction::class);
+
         $this->registerPublishables();
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'joy-voyager-datatable');
@@ -98,6 +103,7 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
     {
         app('blade.compiler')->component('joy-voyager-datatable', Datatable::class);
         app('blade.compiler')->component('joy-voyager-datatables', DatatablesComponent::class);
+        app('blade.compiler')->component('joy-voyager-quick-add', QuickAdd::class);
         app('blade.compiler')->componentNamespace('\\Joy\\VoyagerDatatable\\View\\Components', 'joy-voyager-datatable');
     }
 

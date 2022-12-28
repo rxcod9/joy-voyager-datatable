@@ -88,7 +88,6 @@
                     "drawCallback": function( settings ) {
                         $('#wrapper{{ $dataId }} .select_all').off('click');
                         $('#wrapper{{ $dataId }} .select_all').on('click', function(e) {
-                            console.log('clicked');
                             e.stopPropagation();
                             $('#wrapper{{ $dataId }} input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
                         });
@@ -100,7 +99,6 @@
 
             $('#wrapper{{ $dataId }} .select_all').off('click');
             $('#wrapper{{ $dataId }} .select_all').on('click', function(e) {
-                console.log('clicked');
                 e.stopPropagation();
                 $('#wrapper{{ $dataId }} input[name="row_id"]').prop('checked', $(this).prop('checked')).trigger('change');
             });
@@ -123,3 +121,4 @@
         });
     </script>
 @endpush
+@include('joy-voyager-datatable::bread.partials.actions-script', ['actions' => $actions, 'dataType' => $dataType, 'data' => null, 'dataId' => $dataId])
