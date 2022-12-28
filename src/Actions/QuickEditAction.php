@@ -25,10 +25,10 @@ class QuickEditAction extends AbstractAction
     public function getAttributes()
     {
         return [
-            'class'   => 'btn btn-sm btn-success pull-right quick-edit',
-            'target'  => '_blank',
-            'data-id' => $this->data->getKey(),
-            'data-loading-text' => "<i class='fa fa-spinner fa-spin'></i> <span class='hidden-xs hidden-sm'>" . $this->getTitle() . "...</span>",
+            'class'             => 'btn btn-sm btn-success pull-right quick-edit',
+            'target'            => '_blank',
+            'data-id'           => $this->data->getKey(),
+            'data-loading-text' => "<i class='fa fa-spinner fa-spin'></i> <span class='hidden-xs hidden-sm'>" . $this->getTitle() . '...</span>',
         ];
     }
 
