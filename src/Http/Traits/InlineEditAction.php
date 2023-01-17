@@ -48,14 +48,14 @@ trait InlineEditAction
         }
 
         $fieldDataRow = \dataRowByField($field);
-        $editRows = $dataType->editRows->filter(function ($editRow) use ($field, $fieldDataRow) {
-            if($editRow->field === $field) {
+        $editRows     = $dataType->editRows->filter(function ($editRow) use ($field, $fieldDataRow) {
+            if ($editRow->field === $field) {
                 return true;
             }
-            if(optional($fieldDataRow->details)->column === $editRow->field) {
+            if (optional($fieldDataRow->details)->column === $editRow->field) {
                 return true;
             }
-            if(optional($fieldDataRow->details)->type_column === $editRow->field) {
+            if (optional($fieldDataRow->details)->type_column === $editRow->field) {
                 return true;
             }
             return ;
@@ -111,14 +111,14 @@ trait InlineEditAction
         $this->authorize('edit', $data);
 
         $fieldDataRow = \dataRowByField($field);
-        $editRows = $dataType->editRows->filter(function ($editRow) use ($field, $fieldDataRow) {
-            if($editRow->field === $field) {
+        $editRows     = $dataType->editRows->filter(function ($editRow) use ($field, $fieldDataRow) {
+            if ($editRow->field === $field) {
                 return true;
             }
-            if(optional($fieldDataRow->details)->column === $editRow->field) {
+            if (optional($fieldDataRow->details)->column === $editRow->field) {
                 return true;
             }
-            if(optional($fieldDataRow->details)->type_column === $editRow->field) {
+            if (optional($fieldDataRow->details)->type_column === $editRow->field) {
                 return true;
             }
             return ;
