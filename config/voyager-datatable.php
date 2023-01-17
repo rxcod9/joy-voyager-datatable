@@ -33,6 +33,8 @@ return [
         // 'resource'   => Yajra\DataTables\ApiResourceDataTable::class,
     ],
 
+    'stateSave' => env('VOYAGER_DATATABLE_STATESAVE', true),
+
     /*
     |--------------------------------------------------------------------------
     | Filters config

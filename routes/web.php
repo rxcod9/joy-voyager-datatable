@@ -42,6 +42,11 @@ Route::group(['prefix' => config('joy-voyager-datatable.admin_prefix', 'admin')]
 
                     Route::get($dataType->slug . '/{id}/quick-edit', $breadController.'@quickEdit')->name($dataType->slug.'.quick-edit');
                     Route::post($dataType->slug . '/{id}/quick-update', $breadController.'@quickUpdate')->name($dataType->slug.'.quick-update');
+
+                    Route::get($dataType->slug . '/{id}/inline-edit/{field}', $breadController.'@inlineEdit')->name($dataType->slug.'.inline-edit');
+                    Route::post($dataType->slug . '/{id}/inline-update/{field}', $breadController.'@inlineUpdate')->name($dataType->slug.'.inline-update');
+
+                    Route::delete($dataType->slug . '/{id}/quick-delete', $breadController.'@destroy')->name($dataType->slug.'.quick-delete');
                 }
             } catch (\InvalidArgumentException $e) {
                 throw new \InvalidArgumentException("Custom routes hasn't been configured because: ".$e->getMessage(), 1);

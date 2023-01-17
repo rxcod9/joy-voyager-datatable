@@ -9,30 +9,42 @@ if (!function_exists('dataTypeTableColumns')) {
     /**
      * Helper to get dataType dataTable columns.
      */
-    function dataTypeTableColumns(DataType $dataType, bool $showCheckboxColumn): array
-    {
+    function dataTypeTableColumns(
+        DataType $dataType,
+        bool $showCheckboxColumn,
+        array $searchableColumns = [],
+        array $sortableColumns = []
+    ): array {
         $model   = app($dataType->model_name);
         $columns = $showCheckboxColumn ? [[
             'data'       => 'index',
             'name'       => $model->getKeyName(),
             'orderable'  => true,
-            'searchable' => false
+            'searchable' => true,
+            'class'      => 'dt-col-index',
         ]] : [];
-        $browseColumns = $dataType->browseRows->map(function (DataRow $row) {
-            return [
-                'data' => $row->field,
-                'name' => $row->field,
-                // 'orderable' => false,
-                // 'searchable' => false
-            ];
-        })->toArray();
+
+        $editableColumns = $dataType->editRows->pluck('field')->toArray();
+
+        $browseColumns = $dataType->browseRows->map(
+            function (DataRow $row) use ($editableColumns, $searchableColumns, $sortableColumns) {
+                $editable = in_array($row->field, $editableColumns);
+                return [
+                    'data'       => $row->field,
+                    'name'       => $row->field,
+                    'orderable'  => in_array($row->field, $sortableColumns),
+                    'searchable' => in_array($row->field, $searchableColumns),
+                    'class'      => implode(' ', ['dt-col-' . $row->field, $editable ? 'dt-col-editable' : '']),
+                ];
+            }
+        )->toArray();
 
         $actionColumns = [[
             'data'       => 'actions',
             'name'       => 'actions',
             'orderable'  => false,
             'searchable' => false,
-            'class'      => 'no-sort no-click bread-actions',
+            'class'      => 'no-sort no-click bread-actions dt-col-actions',
         ]];
 
         return array_merge($columns, $browseColumns, $actionColumns);

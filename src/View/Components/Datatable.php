@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\Component;
 use TCG\Voyager\Facades\Voyager;
-use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
+use Joy\VoyagerCore\Http\Controllers\Traits\BreadRelationshipParser;
 use TCG\Voyager\Models\DataType;
 
 class Datatable extends Component
@@ -177,7 +177,8 @@ class Datatable extends Component
         }
 
         // Define list of columns that can be sorted server side
-        $sortableColumns = $this->getSortableColumns($dataType->browseRows);
+        $searchableColumns = $this->getSearchableColumns($dataType->browseRows);
+        $sortableColumns   = $this->getSortableColumns($dataType->browseRows);
 
         $view = 'joy-voyager-datatable::components.datatable';
 
@@ -191,6 +192,7 @@ class Datatable extends Component
             'isModelTranslatable' => $isModelTranslatable,
             'orderBy'             => $orderBy,
             'orderColumn'         => $orderColumn,
+            'searchableColumns'   => $searchableColumns,
             'sortableColumns'     => $sortableColumns,
             'sortOrder'           => $sortOrder,
             'usesSoftDeletes'     => $usesSoftDeletes,
@@ -203,6 +205,24 @@ class Datatable extends Component
             'withoutActions'      => $this->withoutActions,
             'dataId'              => $this->dataId,
         ]);
+    }
+
+    protected function getSearchableColumns($rows)
+    {
+        return $rows->filter(function ($item) {
+            if ($item->type != 'relationship') {
+                return true;
+            }
+            if ($item->details->type != 'belongsTo') {
+                return false;
+            }
+
+            // @todo enable/disable from config
+
+            return !$this->relationIsUsingAccessorAsLabel($item->details);
+        })
+        ->pluck('field')
+        ->toArray();
     }
 
     protected function getSortableColumns($rows)

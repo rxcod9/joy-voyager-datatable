@@ -5,7 +5,7 @@ namespace Joy\VoyagerDatatable\View\Components;
 use Illuminate\Http\Request;
 use Illuminate\View\Component;
 use TCG\Voyager\Facades\Voyager;
-use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
+use Joy\VoyagerCore\Http\Controllers\Traits\BreadRelationshipParser;
 
 class QuickAdd extends Component
 {

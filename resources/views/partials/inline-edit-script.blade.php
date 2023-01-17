@@ -1,9 +1,9 @@
-@once('quick-edit' . ($dataId ?? ''))
+@once('inline-edit' . ($dataId ?? ''))
 @push('javascript')
 
-{{-- Quick Edit modal --}}
-<div class="modal modal-info fade" tabindex="-1" id="quick_edit_modal{{ $dataId }}" role="dialog">
-    <div class="modal-dialog modal-xl">
+{{-- Inline Edit modal --}}
+<div class="modal modal-info fade" tabindex="-1" id="inline_edit_modal{{ $dataId }}" role="dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}"><span aria-hidden="true">&times;</span></button>
@@ -16,7 +16,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade modal-danger" id="quick_edit_confirm_delete_modal{{ $dataId }}">
+<div class="modal fade modal-danger" id="inline_edit_confirm_delete_modal{{ $dataId }}">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -27,12 +27,12 @@
             </div>
 
             <div class="modal-body">
-                <h4>{{ __('voyager::generic.are_you_sure_delete') }} '<span class="quick_edit_confirm_delete_name"></span>'</h4>
+                <h4>{{ __('voyager::generic.are_you_sure_delete') }} '<span class="inline_edit_confirm_delete_name"></span>'</h4>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
-                <button type="button" class="btn btn-danger" id="quick_edit_confirm_delete{{ $dataId }}">{{ __('voyager::generic.delete_confirm') }}</button>
+                <button type="button" class="btn btn-danger" id="inline_edit_confirm_delete{{ $dataId }}">{{ __('voyager::generic.delete_confirm') }}</button>
             </div>
         </div>
     </div>
@@ -40,27 +40,34 @@
 <!-- End Delete File Modal -->
 <script>
     var itemId;
-    var quickEditAction = `{{ route('voyager.'.$dataType->slug.'.quick-edit', ['id' => '__ID__']) }}`;
-    var quickUpdateFormAction = `{{ route('voyager.'.$dataType->slug.'.quick-update', ['id' => '__ID__']) }}`;
-    $('#wrapper{{ $dataId }} #dataTable{{ $dataId }}').on('click', 'td .quick-edit', function (e) {
+    var inlineEditAction = `{{ route('voyager.'.$dataType->slug.'.inline-edit', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
+    var inlineUpdateFormAction = `{{ route('voyager.'.$dataType->slug.'.inline-update', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
+    $('#wrapper{{ $dataId }} #dataTable{{ $dataId }}').on('dblclick', 'td.dt-col-editable', function (e) {
         const btn = $(this);
-        btn.button('loading');
-        itemId = btn.data('id');
+        btn.data(
+            'loading-text',
+            btn.text() + " <i class='fa fa-spinner fa-spin'></i>"
+        ).button('loading');
+        const field = $(this).attr('class').split(' ').filter(
+            item => item.indexOf('dt-col-') !== -1 && item !== 'dt-col-editable'
+        )[0].replace('dt-col-', '').trim();
+
+        itemId = $(this).parent().find('.dt-col-index').find('input[name=row_id]').val();
         $.ajax({
-            url: quickEditAction.replace('__ID__', itemId),
+            url: inlineEditAction.replace('__ID__', itemId).replace('__FIELD__', field),
             type: 'GET',
             success: function (response) {
                 btn.button('reset');
 
-                $('#quick_edit_modal{{ $dataId }} .modal-body').html(response);
+                $('#inline_edit_modal{{ $dataId }} .modal-body').html(response);
 
-                $('#quick_edit_modal{{ $dataId }}').modal('show');
+                $('#inline_edit_modal{{ $dataId }}').modal('show');
 
-                $('#quick_edit_modal{{ $dataId }} .form-group .datepicker').datetimepicker();
+                $('#inline_edit_modal{{ $dataId }} .form-group .datepicker').datetimepicker();
 
                 //Init datepicker for date fields if data-datepicker attribute defined
                 //or if browser does not handle date inputs
-                $('#quick_edit_modal{{ $dataId }} .form-group input[type=date]').each(function (idx, elt) {
+                $('#inline_edit_modal{{ $dataId }} .form-group input[type=date]').each(function (idx, elt) {
                     if (elt.hasAttribute('data-datepicker')) {
                         elt.type = 'text';
                         $(elt).datetimepicker($(elt).data('datepicker'));
@@ -73,8 +80,8 @@
                     }
                 });
 
-                $('#quick_edit_modal{{ $dataId }} select.select2').select2({width: '100%'});
-                $('#quick_edit_modal{{ $dataId }} select.select2-ajax').each(function() {
+                $('#inline_edit_modal{{ $dataId }} select.select2').select2({width: '100%'});
+                $('#inline_edit_modal{{ $dataId }} select.select2-ajax').each(function() {
                     $(this).select2({
                         width: '100%',
                         tags: $(this).hasClass('taggable'),
@@ -159,9 +166,9 @@
 
                 tinymce.init(window.voyagerTinyMCE.getConfig(additionalConfig));
 
-                $('#quick_edit_modal{{ $dataId }} #slug').slugify();
+                $('#inline_edit_modal{{ $dataId }} #slug').slugify();
 
-                $('#quick_edit_modal{{ $dataId }} input[data-slug-origin]').each(function(i, el) {
+                $('#inline_edit_modal{{ $dataId }} input[data-slug-origin]').each(function(i, el) {
                     $(el).slugify();
                 });
 
@@ -185,27 +192,27 @@
 
         return false;
     });
-    $('#quick_edit_modal{{ $dataId }}').on('click', 'form.form-edit-add button[type="submit"]', function (e) {
-    // $('#quick_edit_modal{{ $dataId }} form.form-edit-add').submit(function (e) {
-        $('#quick_edit_modal{{ $dataId }} form.form-edit-add button[type="submit"]').data(
+    $('#inline_edit_modal{{ $dataId }}').on('click', 'form.form-inline-edit button[type="submit"]', function (e) {
+    // $('#inline_edit_modal{{ $dataId }} form.form-inline-edit').submit(function (e) {
+        $('#inline_edit_modal{{ $dataId }} form.form-inline-edit button[type="submit"]').data(
             'loading-text',
             "<i class='fa fa-spinner fa-spin'></i> Saving..."
         ).button('loading');
         e.preventDefault(); // avoid to execute the actual submit of the form.
-        // $('#quick_edit_modal{{ $dataId }} .modal-body form');
-        // $.post(quickUpdateFormAction.replace('__ID__', itemId), {}, function (response) {
+        // $('#inline_edit_modal{{ $dataId }} .modal-body form');
+        // $.post(inlineUpdateFormAction.replace('__ID__', itemId), {}, function (response) {
 
-        //     // $('#quick_edit_modal{{ $dataId }} .modal-body').html(response);
+        //     // $('#inline_edit_modal{{ $dataId }} .modal-body').html(response);
         // });
 
-        // $('#quick_edit_modal{{ $dataId }}').modal('show');
+        // $('#inline_edit_modal{{ $dataId }}').modal('show');
         // return false;
 
-        var form = $('#quick_edit_modal{{ $dataId }} form.form-edit-add');
+        var form = $('#inline_edit_modal{{ $dataId }} form.form-inline-edit');
         var actionUrl = form.attr('action');
         $('.alert', form).remove();
 
-        var formData = new FormData($('#quick_edit_modal{{ $dataId }} form.form-edit-add')[0]);
+        var formData = new FormData($('#inline_edit_modal{{ $dataId }} form.form-inline-edit')[0]);
         
         $.ajax({
             type: "POST",
@@ -219,14 +226,14 @@
             success: function(response)
             {
                 $('.alert', form).remove();
-                $('#quick_edit_modal{{ $dataId }} form.form-edit-add button[type="submit"]').button('reset');
-                $('#quick_edit_modal{{ $dataId }}').modal('hide');
+                $('#inline_edit_modal{{ $dataId }} form.form-inline-edit button[type="submit"]').button('reset');
+                $('#inline_edit_modal{{ $dataId }}').modal('hide');
                 $('#wrapper{{ $dataId }} #dataTable{{ $dataId }}').DataTable().ajax.reload();
                 toastr.success(response.message);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 $('.alert', form).remove();
-                $('#quick_edit_modal{{ $dataId }} form.form-edit-add button[type="submit"]').button('reset');
+                $('#inline_edit_modal{{ $dataId }} form.form-inline-edit button[type="submit"]').button('reset');
                 var err = JSON.parse(jqXHR.responseText);
                 let errorsHtml = '';
                 for(let errorKey in err.errors) {
@@ -277,8 +284,8 @@
                     }
                 });
             }
-            // $('.quick_edit_confirm_delete_modal{{ $dataId }} .quick_edit_confirm_delete_name').text(params.filename);
-            // $('#quick_edit_confirm_delete_modal{{ $dataId }}').modal('show');
+            // $('.inline_edit_confirm_delete_modal{{ $dataId }} .inline_edit_confirm_delete_name').text(params.filename);
+            // $('#inline_edit_confirm_delete_modal{{ $dataId }}').modal('show');
 
         };
     }
@@ -290,16 +297,16 @@
         //     $('.side-body').multilingual({"editing": true});
         // @endif
 
-        // $('#quick_edit_modal{{ $dataId }} .side-body input[data-slug-origin]').each(function(i, el) {
+        // $('#inline_edit_modal{{ $dataId }} .side-body input[data-slug-origin]').each(function(i, el) {
         //     $(el).slugify();
         // });
 
-        $('#quick_edit_modal{{ $dataId }}').on('click', '.form-group .remove-multi-image', deleteHandler('img', true));
-        $('#quick_edit_modal{{ $dataId }}').on('click', '.form-group .remove-single-image', deleteHandler('img', false));
-        $('#quick_edit_modal{{ $dataId }}').on('click', '.form-group .remove-multi-file', deleteHandler('a', true));
-        $('#quick_edit_modal{{ $dataId }}').on('click', '.form-group .remove-single-file', deleteHandler('a', false));
+        $('#inline_edit_modal{{ $dataId }}').on('click', '.form-group .remove-multi-image', deleteHandler('img', true));
+        $('#inline_edit_modal{{ $dataId }}').on('click', '.form-group .remove-single-image', deleteHandler('img', false));
+        $('#inline_edit_modal{{ $dataId }}').on('click', '.form-group .remove-multi-file', deleteHandler('a', true));
+        $('#inline_edit_modal{{ $dataId }}').on('click', '.form-group .remove-single-file', deleteHandler('a', false));
 
-        $('#quick_edit_confirm_delete{{ $dataId }}').on('click', function(){
+        $('#inline_edit_confirm_delete{{ $dataId }}').on('click', function(){
             $.post('{{ route('voyager.'.$dataType->slug.'.media.remove') }}', params, function (response) {
                 if ( response
                     && response.data
@@ -313,7 +320,7 @@
                 }
             });
 
-            $('#quick_edit_confirm_delete_modal{{ $dataId }}').modal('hide');
+            $('#inline_edit_confirm_delete_modal{{ $dataId }}').modal('hide');
         });
         $('[data-toggle="tooltip"]').tooltip();
     });

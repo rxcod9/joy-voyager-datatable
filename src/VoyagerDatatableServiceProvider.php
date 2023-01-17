@@ -30,6 +30,10 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Voyager::replaceAction(
+            \TCG\Voyager\Actions\DeleteAction::class,
+            \Joy\VoyagerDatatable\Actions\QuickDeleteAction::class,
+        );
         Voyager::addAction(\Joy\VoyagerDatatable\Actions\PreviewAction::class);
         Voyager::addAction(\Joy\VoyagerDatatable\Actions\QuickEditAction::class);
 

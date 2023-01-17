@@ -73,11 +73,12 @@
                     "columnDefs" => $columnDefs,
                     "processing" => true,
                     "serverSide" => true,
+                    "stateSave" => config('joy-voyager-datatable.stateSave', true),
                     "ajax" => [
                         'url' => route('voyager.'.$dataType->slug.'.post-ajax', ['showSoftDeleted' => $showSoftDeleted]),
                         'type' => 'POST',
                     ],
-                    "columns" => \dataTypeTableColumns($dataType, $showCheckboxColumn),
+                    "columns" => \dataTypeTableColumns($dataType, $showCheckboxColumn, $searchableColumns, $sortableColumns),
                 ],
                 config('voyager.dashboard.data_tables', []))
             , true) !!};
@@ -122,3 +123,4 @@
     </script>
 @endpush
 @include('joy-voyager-datatable::bread.partials.actions-script', ['actions' => $actions, 'dataType' => $dataType, 'data' => null, 'dataId' => $dataId])
+@include('joy-voyager-datatable::partials.inline-edit-script', ['dataType' => $dataType, 'dataId' => $dataId])

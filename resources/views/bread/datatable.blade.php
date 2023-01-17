@@ -8,15 +8,12 @@
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
         @can('add', app($dataType->model_name))
-            
             <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a>
             @if(config('joy-voyager-datatable.quick-add.enabled', true))
                 <x-joy-voyager-quick-add :slug="$dataType->slug" />
             @endif
-        @endcan
-        @can('add', app($dataType->model_name))
         @endcan
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')

@@ -16,7 +16,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade modal-danger" id="confirm_delete_modal{{ $dataId }}">
+<div class="modal fade modal-danger" id="quick_add_confirm_delete_modal{{ $dataId }}">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -27,12 +27,12 @@
             </div>
 
             <div class="modal-body">
-                <h4>{{ __('voyager::generic.are_you_sure_delete') }} '<span class="confirm_delete_name"></span>'</h4>
+                <h4>{{ __('voyager::generic.are_you_sure_delete') }} '<span class="quick_add_confirm_delete_name"></span>'</h4>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
-                <button type="button" class="btn btn-danger" id="confirm_delete{{ $dataId }}">{{ __('voyager::generic.delete_confirm') }}</button>
+                <button type="button" class="btn btn-danger" id="quick_add_confirm_delete{{ $dataId }}">{{ __('voyager::generic.delete_confirm') }}</button>
             </div>
         </div>
     </div>
@@ -162,6 +162,17 @@
                 $('#quick_create_modal{{ $dataId }} input[data-slug-origin]').each(function(i, el) {
                     $(el).slugify();
                 });
+
+                if(typeof helpers.initSelect2MorphToType === 'function') {
+                    helpers.initSelect2MorphToType('select.select2-morph-to-type');
+                } else {
+                    console.warn('initSelect2MorphToType is not available yet.');
+                }
+                if(typeof helpers.initSelect2MorphToAjax === 'function') {
+                    helpers.initSelect2MorphToAjax('select.select2-morph-to-ajax');
+                } else {
+                    console.warn('initSelect2MorphToAjax is not available yet.');
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 btn.button('reset');
@@ -190,6 +201,7 @@
 
         var form = $('#quick_create_modal{{ $dataId }} form.form-edit-add');
         var actionUrl = form.attr('action');
+        $('.alert', form).remove();
 
         var formData = new FormData($('#quick_create_modal{{ $dataId }} form.form-edit-add')[0]);
         
@@ -201,7 +213,7 @@
             processData: false,
             contentType: false,
             cache: false,
-            timeout: 800000,
+            timeout: 120000,
             success: function(response)
             {
                 $('.alert', form).remove();
@@ -263,8 +275,8 @@
                     }
                 });
             }
-            // $('.confirm_delete_modal{{ $dataId }} .confirm_delete_name').text(params.filename);
-            // $('#confirm_delete_modal{{ $dataId }}').modal('show');
+            // $('.quick_add_confirm_delete_modal{{ $dataId }} .quick_add_confirm_delete_name').text(params.filename);
+            // $('#quick_add_confirm_delete_modal{{ $dataId }}').modal('show');
 
         };
     }
@@ -285,7 +297,7 @@
         $('#quick_create_modal{{ $dataId }}').on('click', '.form-group .remove-multi-file', deleteHandler('a', true));
         $('#quick_create_modal{{ $dataId }}').on('click', '.form-group .remove-single-file', deleteHandler('a', false));
 
-        $('#confirm_delete{{ $dataId }}').on('click', function(){
+        $('#quick_add_confirm_delete{{ $dataId }}').on('click', function(){
             $.post('{{ route('voyager.'.$dataType->slug.'.media.remove') }}', params, function (response) {
                 if ( response
                     && response.data
@@ -299,7 +311,7 @@
                 }
             });
 
-            $('#confirm_delete_modal{{ $dataId }}').modal('hide');
+            $('#quick_add_confirm_delete_modal{{ $dataId }}').modal('hide');
         });
         $('[data-toggle="tooltip"]').tooltip();
     });
