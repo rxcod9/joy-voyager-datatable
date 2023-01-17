@@ -39,10 +39,11 @@
 </div>
 <!-- End Delete File Modal -->
 <script>
-    var itemId;
-    var inlineEditAction = `{{ route('voyager.'.$dataType->slug.'.inline-edit', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
-    var inlineUpdateFormAction = `{{ route('voyager.'.$dataType->slug.'.inline-update', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
+    var {{ \Str::camel($dataId) }}itemId;
+    var {{ \Str::camel($dataId) }}inlineEditAction = `{{ route('voyager.'.$dataType->slug.'.inline-edit', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
+    var {{ \Str::camel($dataId) }}inlineUpdateFormAction = `{{ route('voyager.'.$dataType->slug.'.inline-update', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
     $('#wrapper{{ $dataId }} #dataTable{{ $dataId }}').on('dblclick', 'td.dt-col-editable', function (e) {
+        console.log('dataId', '{{ $dataId }}');
         const btn = $(this);
         btn.data(
             'loading-text',
@@ -52,9 +53,9 @@
             item => item.indexOf('dt-col-') !== -1 && item !== 'dt-col-editable'
         )[0].replace('dt-col-', '').trim();
 
-        itemId = $(this).parent().find('.dt-col-index').find('input[name=row_id]').val();
+        {{ \Str::camel($dataId) }}itemId = $(this).parent().find('.dt-col-index').find('input[name=row_id]').val();
         $.ajax({
-            url: inlineEditAction.replace('__ID__', itemId).replace('__FIELD__', field),
+            url: {{ \Str::camel($dataId) }}inlineEditAction.replace('__ID__', {{ \Str::camel($dataId) }}itemId).replace('__FIELD__', field),
             type: 'GET',
             success: function (response) {
                 btn.button('reset');
@@ -200,7 +201,7 @@
         ).button('loading');
         e.preventDefault(); // avoid to execute the actual submit of the form.
         // $('#inline_edit_modal{{ $dataId }} .modal-body form');
-        // $.post(inlineUpdateFormAction.replace('__ID__', itemId), {}, function (response) {
+        // $.post({{ \Str::camel($dataId) }}inlineUpdateFormAction.replace('__ID__', {{ \Str::camel($dataId) }}itemId), {}, function (response) {
 
         //     // $('#inline_edit_modal{{ $dataId }} .modal-body').html(response);
         // });
