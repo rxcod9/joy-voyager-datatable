@@ -2,13 +2,17 @@
 
 namespace Joy\VoyagerDatatable;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Joy\VoyagerDatatable\Events\FilterFormFieldsRegistered;
+use Joy\VoyagerDatatable\Facades\Voyager as VoyagerFacade;
+use Joy\VoyagerDatatable\FilterFormFields\After\DescriptionHandler;
 use Joy\VoyagerDatatable\View\Components\Datatable;
 use Joy\VoyagerDatatable\View\Components\Datatables as DatatablesComponent;
 use Joy\VoyagerDatatable\View\Components\QuickAdd;
-use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Facades\Voyager as TcgVoyager;
 use Yajra\DataTables\DataTables;
 
 /**
@@ -30,12 +34,12 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Voyager::replaceAction(
+        TcgVoyager::replaceAction(
             \TCG\Voyager\Actions\DeleteAction::class,
             \Joy\VoyagerDatatable\Actions\QuickDeleteAction::class,
         );
-        Voyager::addAction(\Joy\VoyagerDatatable\Actions\PreviewAction::class);
-        Voyager::addAction(\Joy\VoyagerDatatable\Actions\QuickEditAction::class);
+        TcgVoyager::addAction(\Joy\VoyagerDatatable\Actions\PreviewAction::class);
+        TcgVoyager::addAction(\Joy\VoyagerDatatable\Actions\QuickEditAction::class);
 
         $this->registerPublishables();
 
@@ -45,7 +49,9 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        if (config('joy-voyager-datatable.database.autoload_migrations', true)) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'joy-voyager-datatable');
 
@@ -118,6 +124,15 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $loader = AliasLoader::getInstance();
+        $loader->alias('JoyVoyagerDatatable', VoyagerFacade::class);
+
+        $this->app->singleton('joy-voyager-datatable', function () {
+            return new Voyager();
+        });
+
+        $this->registerFilterFormFields();
+
         $this->mergeConfigFrom(__DIR__ . '/../config/voyager-datatable.php', 'joy-voyager-datatable');
 
         $this->registerCommands();
@@ -155,5 +170,43 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
     protected function registerCommands(): void
     {
         //
+    }
+
+    protected function registerFilterFormFields()
+    {
+        $filterFilterFormFields = [
+            'checkbox',
+            'multiple_checkbox',
+            'color',
+            'date',
+            'file',
+            'image',
+            'multiple_images',
+            'media_picker',
+            'number',
+            'password',
+            'radio_btn',
+            'rich_text_box',
+            'code_editor',
+            'markdown_editor',
+            'select_dropdown',
+            'select_multiple',
+            'text',
+            'text_area',
+            'time',
+            'timestamp',
+            // 'hidden',
+            'coordinates',
+        ];
+
+        foreach ($filterFilterFormFields as $filterFilterFormField) {
+            $class = Str::studly("{$filterFilterFormField}_handler");
+
+            VoyagerFacade::addFilterFormField("Joy\\VoyagerDatatable\\FilterFormFields\\{$class}");
+        }
+
+        VoyagerFacade::addAfterFilterFormField(DescriptionHandler::class);
+
+        event(new FilterFormFieldsRegistered($filterFilterFormFields));
     }
 }

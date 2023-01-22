@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use TCG\Voyager\Models\DataRow;
 use TCG\Voyager\Models\DataType;
@@ -162,5 +163,42 @@ if (!function_exists('modelHasScope')) {
     function modelHasScope($model, string $scope): bool
     {
         return method_exists($model, 'scope' . Str::studly($scope));
+    }
+}
+
+if (!function_exists('isValidCarbon')) {
+    /**
+     * Is valid carbon date
+     *
+     * @param $string
+     */
+    function isValidCarbon($string): bool
+    {
+        try {
+            $date = Carbon::parse($string);
+            return true;
+        } catch (Exception $e) {
+            //
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('safeCarbonParse')) {
+    /**
+     * Is valid carbon date
+     *
+     * @param $string
+     */
+    function safeCarbonParse($string)
+    {
+        try {
+            return Carbon::parse($string);
+        } catch (Exception $e) {
+            //
+        }
+
+        return null;
     }
 }

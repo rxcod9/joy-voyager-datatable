@@ -44,8 +44,11 @@ return [
     |
     */
     'filters'        => [
-        'hidden'   => [
+        'type_hidden'   => [
             'password',
+        ],
+        'hidden'   => [
+            'deleted_at',
         ]
     ],
     'users'        => [

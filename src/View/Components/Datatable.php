@@ -186,24 +186,38 @@ class Datatable extends Component
             $view = 'joy-voyager-datatable::' . $this->slug . '.components.datatable';
         }
 
+        // Filter
+        $filterDataTypeContent = (strlen($dataType->model_name) != 0)
+                            ? new $dataType->model_name()
+                            : false;
+
+        $filterRows = $dataType->rows;
+        foreach ($filterRows as $key => $row) {
+            $filterRows[$key]['col_width'] = 100;
+        }
+
+        // Eagerload Relations
+        $this->eagerLoadRelations($filterDataTypeContent, $dataType, 'browse', $isModelTranslatable);
+
         return Voyager::view($view, [
-            'actions'             => $actions,
-            'dataType'            => $dataType,
-            'isModelTranslatable' => $isModelTranslatable,
-            'orderBy'             => $orderBy,
-            'orderColumn'         => $orderColumn,
-            'searchableColumns'   => $searchableColumns,
-            'sortableColumns'     => $sortableColumns,
-            'sortOrder'           => $sortOrder,
-            'usesSoftDeletes'     => $usesSoftDeletes,
-            'showSoftDeleted'     => $showSoftDeleted,
-            'showCheckboxColumn'  => $showCheckboxColumn,
-            'withLabel'           => $this->withLabel,
-            'autoWidth'           => $this->autoWidth,
-            'columnDefs'          => $this->columnDefs,
-            'withoutCheckbox'     => $this->withoutCheckbox,
-            'withoutActions'      => $this->withoutActions,
-            'dataId'              => $this->dataId,
+            'actions'               => $actions,
+            'dataType'              => $dataType,
+            'filterDataTypeContent' => $filterDataTypeContent,
+            'isModelTranslatable'   => $isModelTranslatable,
+            'orderBy'               => $orderBy,
+            'orderColumn'           => $orderColumn,
+            'searchableColumns'     => $searchableColumns,
+            'sortableColumns'       => $sortableColumns,
+            'sortOrder'             => $sortOrder,
+            'usesSoftDeletes'       => $usesSoftDeletes,
+            'showSoftDeleted'       => $showSoftDeleted,
+            'showCheckboxColumn'    => $showCheckboxColumn,
+            'withLabel'             => $this->withLabel,
+            'autoWidth'             => $this->autoWidth,
+            'columnDefs'            => $this->columnDefs,
+            'withoutCheckbox'       => $this->withoutCheckbox,
+            'withoutActions'        => $this->withoutActions,
+            'dataId'                => $this->dataId,
         ]);
     }
 
@@ -213,7 +227,11 @@ class Datatable extends Component
             if ($item->type != 'relationship') {
                 return true;
             }
-            if ($item->details->type != 'belongsTo') {
+            if (!in_array($item->details->type, [
+                'belongsTo',
+                'belongsToMany',
+                'morphTo',
+            ])) {
                 return false;
             }
 
@@ -243,7 +261,6 @@ class Datatable extends Component
 
     protected function relationIsUsingAccessorAsLabel($details)
     {
-        Log::debug($details->model);
-        return in_array($details->label, app($details->model)->additional_attributes ?? []);
+        return ($details->model ?? null) && in_array($details->label, app($details->model)->additional_attributes ?? []);
     }
 }

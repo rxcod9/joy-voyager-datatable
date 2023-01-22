@@ -179,16 +179,17 @@ class DataTable
             // i.e. for age column you can add scopeAge and for created_at you can add scopeCreatedAt
             if (modelHasScope($modelClass, $row->field)) {
                 $dataTable->filterColumn($row->field, function ($query, $keyword) use ($row, $dataType, $request): void {
-                    if ($keyword) {
+                    if (!(is_null($keyword) || $keyword === '' || $keyword === ',')) {
                         $query->scopes([
                             Str::camel($row->field) => [$keyword],
                         ]);
                     }
                 });
+                return;
             }
 
             $dataTable->filterColumn($row->field, function ($query, $keyword) use ($row, $dataType, $request): void {
-                if ($keyword) {
+                if (!(is_null($keyword) || $keyword === '' || $keyword === ',')) {
                     $this->filter->handle($query, $keyword, $row, $dataType, $request);
                 }
             });

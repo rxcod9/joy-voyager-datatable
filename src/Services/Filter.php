@@ -5,6 +5,7 @@ namespace Joy\VoyagerDatatable\Services;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use TCG\Voyager\Models\DataRow;
 use TCG\Voyager\Models\DataType;
@@ -23,7 +24,7 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        if (!$keyword) {
+        if (is_null($keyword) || $keyword === '' || $keyword === ',') {
             return;
         }
 
@@ -106,7 +107,19 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet. Probably radio check if field is null or not
+        $query->when($keyword === '1', function ($query) use ($row, $keyword) {
+            $query->where(function ($query) use ($row, $keyword) {
+                $query
+                    ->whereNotNull($row->field)
+                    ->where($row->field, '!=', config('voyager.user.default_avatar', 'users/default.png'));
+            });
+        })->when($keyword === '0', function ($query) use ($row, $keyword) {
+            $query->where(function ($query) use ($row, $keyword) {
+                $query
+                    ->whereNull($row->field)
+                    ->orWhere($row->field, config('voyager.user.default_avatar', 'users/default.png'));
+            });
+        });
     }
 
     /**
@@ -122,7 +135,123 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
+        if (method_exists($this, 'filterRelationship' . Str::studly($row->details->type))) {
+            $this->{'filterRelationship' . Str::studly($row->details->type)}(
+                $query,
+                $keyword,
+                $row,
+                $dataType,
+                $request
+            );
+            return;
+        }
+    }
+
+    /**
+     * Filter belongsTo relationship
+     *
+     * @param Builder|QueryBuilder $query   Query
+     * @param mixed                $keyword Keyword
+     */
+    protected function filterRelationshipBelongsTo(
+        $query,
+        $keyword,
+        DataRow $row,
+        DataType $dataType,
+        Request $request
+    ): void {
+        $keywords = explode(',', $keyword);
+        $query->whereIn($row->details->column, $keywords);
+    }
+
+    /**
+     * Filter hasOne relationship
+     *
+     * @param Builder|QueryBuilder $query   Query
+     * @param mixed                $keyword Keyword
+     */
+    protected function filterRelationshipHasOne(
+        $query,
+        $keyword,
+        DataRow $row,
+        DataType $dataType,
+        Request $request
+    ): void {
         // @TODO Not implemented yet.
+    }
+
+    /**
+     * Filter hasMany relationship
+     *
+     * @param Builder|QueryBuilder $query   Query
+     * @param mixed                $keyword Keyword
+     */
+    protected function filterRelationshipHasMany(
+        $query,
+        $keyword,
+        DataRow $row,
+        DataType $dataType,
+        Request $request
+    ): void {
+        // @TODO Not implemented yet.
+    }
+
+    /**
+     * Filter belongsToMany relationship
+     *
+     * @param Builder|QueryBuilder $query   Query
+     * @param mixed                $keyword Keyword
+     */
+    protected function filterRelationshipBelongsToMany(
+        $query,
+        $keyword,
+        DataRow $row,
+        DataType $dataType,
+        Request $request
+    ): void {
+        // @TODO Not implemented yet.
+        // $model                 = $query->getModel();
+        // $options               = $row->details;
+        // $belongsToManyRelation = $model->belongsToMany($options->model, $options->pivot_table, $options->foreign_pivot_key ?? null, $options->related_pivot_key ?? null, $options->parent_key ?? null, $options->key);
+        // dd($belongsToManyRelation, $options->model, $options->pivot_table, $options->foreign_pivot_key ?? null, $options->related_pivot_key ?? null, $options->parent_key ?? null, $options->key);
+        // $query->whereHas($belongsToManyRelation, function ($query) use ($belongsToManyRelation) {
+        //     $query->wherePivotNotNull($belongsToManyRelation->getForeignPivotKeyName());
+        // });
+    }
+
+    /**
+     * Filter morphTo relationship
+     *
+     * @param Builder|QueryBuilder $query   Query
+     * @param mixed                $keyword Keyword
+     */
+    protected function filterRelationshipMorphTo(
+        $query,
+        $keyword,
+        DataRow $row,
+        DataType $dataType,
+        Request $request
+    ): void {
+        $peices            = explode(',,', $keyword);
+        $morphToType       = $peices[0] ?? null;
+        $morphToIdKeyword  = $peices[1] ?? null;
+        $morphToIdKeywords = $morphToIdKeyword ? explode(',', $morphToIdKeyword) : null;
+        $options           = $row->details;
+        $typeColumn        = $options->type_column;
+        $column            = $options->column;
+        $types             = $options->types ?? [];
+
+        $query->when(
+            $morphToType && in_array($morphToType, collect($types)->pluck('model')->toArray()),
+            function ($query) use ($typeColumn, $morphToType) {
+                $query->where($typeColumn, $morphToType);
+            }
+        )->when(
+            $morphToIdKeywords,
+            function ($query) use ($column, $morphToIdKeywords) {
+                $query->whereIn($column, $morphToIdKeywords);
+            }
+        );
     }
 
     /**
@@ -170,7 +299,8 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        $query->whereIn($row->field, $keyword);
+        $keywords = explode(',', $keyword);
+        $query->whereIn($row->field, $keywords);
     }
 
     /**
@@ -186,7 +316,33 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet. Must be range
+        $keywords = explode(',', $keyword);
+        $from     = $keywords[0] ?? null;
+        $to       = $keywords[1] ?? null;
+        if ($from) {
+            $from = safeCarbonParse($from);
+        }
+        if ($to) {
+            $to = safeCarbonParse($to);
+        }
+
+        if (count($keywords) === 1 && $from && isValidCarbon($keyword)) {
+            $query->whereDate($row->field, $from->format('Y-m-d'));
+            return;
+        }
+
+        if (count($keywords) === 2) {
+            $query->when($from && $to, function ($query) use ($row, $from, $to) {
+                $query->whereBetween($row->field, [$from->format('Y-m-d H:i'), $to->format('Y-m-d H:i')]);
+            }, function ($query) use ($row, $from, $to) {
+                $query->when($from, function ($query) use ($row, $from) {
+                    $query->where($row->field, '>=', $from->format('Y-m-d H:i'));
+                })->when($to, function ($query) use ($row, $to) {
+                    $query->where($row->field, '<=', $to->format('Y-m-d H:i'));
+                });
+            });
+            return;
+        }
     }
 
     /**
@@ -218,7 +374,12 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet.
+        $options = $row->details;
+        $query->when($keyword === '1', function ($query) use ($row, $options) {
+            $query->where($row->field, $options->on ?? '1')->whereNotNull($row->field);
+        })->when($keyword === '0', function ($query) use ($row, $options) {
+            $query->where($row->field, $options->on ?? '0')->orWhereNull($row->field);
+        });
     }
 
     /**
@@ -310,7 +471,11 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet.
+        $query->when($keyword === '1', function ($query) use ($row, $keyword) {
+            $query->whereNotNull($row->field);
+        })->when($keyword === '0', function ($query) use ($row, $keyword) {
+            $query->whereNull($row->field);
+        });
     }
 
     /**
