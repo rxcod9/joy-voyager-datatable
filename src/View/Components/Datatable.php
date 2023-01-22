@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\Component;
 use TCG\Voyager\Facades\Voyager;
 use Joy\VoyagerCore\Http\Controllers\Traits\BreadRelationshipParser;

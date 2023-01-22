@@ -22,6 +22,6 @@ class DescriptionHandler extends AbstractHandler
                                         data-toggle="tooltip"
                                         data-placement="right"
                                         data-html="true"
-                                        title="'.$options->description.'"></span>';
+                                        title="' . $options->description . '"></span>';
     }
 }

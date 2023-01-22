@@ -23,7 +23,7 @@ class MediaPickerHandler extends AbstractHandler
                 $content = json_encode('[]');
             }
         } else {
-            $content = "'".$dataTypeContent->{$row->field}."'";
+            $content = "'" . $dataTypeContent->{$row->field} . "'";
         }
 
         if (isset($options->base_path)) {
@@ -39,10 +39,10 @@ class MediaPickerHandler extends AbstractHandler
                 }, $options->base_path);
             }
             if (!$dataTypeContent->getKey()) {
-                $uuid = (string) Str::uuid();
+                $uuid               = (string) Str::uuid();
                 $options->base_path = str_replace('{pk}', $uuid, $options->base_path);
-                \Session::put($dataType->slug.'_path', $options->base_path);
-                \Session::put($dataType->slug.'_uuid', $uuid);
+                \Session::put($dataType->slug . '_path', $options->base_path);
+                \Session::put($dataType->slug . '_uuid', $uuid);
             } else {
                 $options->base_path = str_replace('{pk}', $dataTypeContent->getKey(), $options->base_path);
             }
