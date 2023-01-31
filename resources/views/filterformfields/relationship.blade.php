@@ -24,7 +24,7 @@
 
                 <select
                     multiple
-                    class="form-control select2-ajax" name="{{ $options->column }}[]"
+                    class="form-control input-sm select2-ajax" name="{{ $options->column }}[]"
                     data-get-items-route="{{route('voyager.' . $dataType->slug.'.relation')}}"
                     data-get-items-field="{{$row->field}}"
                     @if(!is_null($dataTypeContent->getKey())) data-id="{{$dataTypeContent->getKey()}}" @endif
@@ -151,7 +151,7 @@
 
             @else
                 <select
-                    class="form-control select2-ajax @if(isset($options->taggable) && $options->taggable === 'on') taggable @endif"
+                    class="form-control input-sm select2-ajax @if(isset($options->taggable) && $options->taggable === 'on') taggable @endif"
                     name="{{ $relationshipField }}[]" multiple
                     data-get-items-route="{{route('voyager.' . $dataType->slug.'.relation')}}"
                     data-get-items-field="{{$row->field}}"
@@ -227,7 +227,7 @@
         @endphp
         <?php $selectedValue = (isset($dataTypeContent->{$options->type_column}) && !is_null($dataTypeContent->{$options->type_column})) ? $dataTypeContent->{$options->type_column} : null; ?>
         <select
-            class="form-control select2-morph-to-type"
+            class="form-control input-sm select2-morph-to-type"
             name="{{ $options->type_column }}"
             data-column="{{ $options->column }}"
             style="margin-bottom: 10px;">
@@ -242,7 +242,7 @@
 
         <select
             multiple
-            class="form-control select2-morph-to-ajax select2-morph-to-id" name="{{ $options->column }}[]"
+            class="form-control input-sm select2-morph-to-ajax select2-morph-to-id" name="{{ $options->column }}[]"
             data-get-items-route="{{route('voyager.' . $dataType->slug.'.morph-to-relation')}}"
             data-get-items-field="{{$row->field}}"
             data-type-column="{{ $options->type_column }}"

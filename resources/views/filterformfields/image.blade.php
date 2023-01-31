@@ -3,7 +3,7 @@
     '0' => 'No',
 ]; @endphp
 <?php $selected_value = (isset($dataTypeContent->{$row->field}) && !is_null($dataTypeContent->{$row->field})) ? $dataTypeContent->{$row->field} : null; ?>
-<select class="form-control select2" name="{{ $row->field }}">
+<select class="form-control input-sm select2" name="{{ $row->field }}">
     <option value="">{{__('voyager::generic.none')}}</option>
     <?php $default = (isset($options->filter_default) && !isset($dataTypeContent->{$row->field})) ? $options->filter_default : null; ?>
     @if(isset($options->options))

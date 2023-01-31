@@ -4,6 +4,15 @@ namespace Joy\VoyagerDatatable;
 
 use Joy\VoyagerDatatable\FilterFormFields\After\HandlerInterface as AfterHandlerInterface;
 use Joy\VoyagerDatatable\FilterFormFields\HandlerInterface;
+use Joy\VoyagerDatatable\Lenses\AdministratorLens;
+use Joy\VoyagerDatatable\Lenses\MyItemsLens;
+use Joy\VoyagerDatatable\Lenses\PriorityHigh;
+use Joy\VoyagerDatatable\Lenses\RecentlyCreated;
+use Joy\VoyagerDatatable\Lenses\RegularLens;
+use Joy\VoyagerDatatable\Lenses\StateOpen;
+use Joy\VoyagerDatatable\Lenses\StatusActive;
+use Joy\VoyagerDatatable\Lenses\StatusNew;
+use Joy\VoyagerDatatable\Lenses\UnassignedLens;
 use TCG\Voyager\Voyager as BaseVoyager;
 
 class Voyager extends BaseVoyager
@@ -12,7 +21,15 @@ class Voyager extends BaseVoyager
     protected $afterFilterFormFields = [];
 
     protected $lenses = [
-        // MyItemsLense::class,
+        MyItemsLens::class,
+        RecentlyCreated::class,
+        UnassignedLens::class,
+        AdministratorLens::class,
+        RegularLens::class,
+        PriorityHigh::class,
+        StateOpen::class,
+        StatusNew::class,
+        StatusActive::class,
     ];
 
     // /**
@@ -78,7 +95,7 @@ class Voyager extends BaseVoyager
         }
 
         // You can disable filters by row field for different data types
-        if (in_array($row->field, config('joy-voyager-datatable.' . $dataType->slug . '.filters.hidden', []))) {
+        if (in_array($row->field, config('joy-voyager-datatable.filters.' . $dataType->slug . '.hidden', []))) {
             return false;
         }
 
@@ -87,7 +104,7 @@ class Voyager extends BaseVoyager
                 'belongsTo',
                 // 'hasOne',
                 // 'hasMany',
-                // 'belongsToMany',
+                'belongsToMany',
                 'morphTo',
             ])) {
                 return false;

@@ -49,13 +49,31 @@ return [
         ],
         'hidden'   => [
             'deleted_at',
-        ]
-    ],
-    'users'        => [
-        'filters' => [
+        ],
+        'users'        => [
             'hidden'   => [
                 'remember_token',
             ]
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Global Search Filter config
+    |--------------------------------------------------------------------------
+    |
+    | Here you can specify voyager datatable global search filters settings
+    |
+    */
+    'global_search' => [
+        'default_column'  => 'id,name,first_name,last_name,description,modified_by_id,created_by_id,assigned_to_id,created_at,updated_at', // "id" OR "all" OR columns "id,created_at,updated_at",
+
+        'users'                  => [
+            'default_column'  => 'all',
+        ],
+
+        'roles'                  => [
+            'default_column'  => 'id,name,created_at,updated_at',
         ],
     ],
 
@@ -141,5 +159,39 @@ return [
         */
 
         'not_allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_PREVIEW_NOT_ALLOWED_SLUGS', ''))),
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Lens config
+    |--------------------------------------------------------------------------
+    |
+    | Here you can specify voyager datatable lens settings
+    |
+    */
+
+    'lens' => [
+        /*
+        * If enabled for voyager-datatable lens.
+        */
+        'enabled' => env('VOYAGER_DATATABLE_LENS_ENABLED', true),
+
+        /*
+        | Here you can specify for which data type slugs lens is enabled
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_LENS_ALLOWED_SLUGS', '*'))),
+
+        /*
+        | Here you can specify for which data type slugs lens is not allowed
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'not_allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_LENS_NOT_ALLOWED_SLUGS', 'roles'))),
+    ],
 ];

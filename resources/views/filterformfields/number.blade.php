@@ -1,5 +1,5 @@
 <input type="number"
-       class="form-control"
+       class="form-control input-sm"
        data-filter-group-from 
        data-filter-group="{{ $row->field }}"
        name="{{ $row->field }}[from]"
@@ -10,7 +10,7 @@
        placeholder="From {{ $options->placeholder ?? $row->getTranslatedAttribute('display_name') }}"
        value="{{ $dataTypeContent->{$row->field} ?? $options->filter_default ?? '' }}">
 <input type="number"
-       class="form-control"
+       class="form-control input-sm"
        data-filter-group-to 
        data-filter-group="{{ $row->field }}"
        name="{{ $row->field }}[to]"

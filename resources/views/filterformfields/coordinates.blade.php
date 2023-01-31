@@ -27,7 +27,7 @@
                 <div class="col-md-5" v-if="showAutocomplete">
                     <label class="control-label">{{ __('voyager::generic.find_by_place') }}</label>
                     <input
-                        class="form-control"
+                        class="form-control input-sm"
                         type="text"
                         placeholder="742 Evergreen Terrace"
                         id="places-autocomplete"
@@ -37,7 +37,7 @@
                 <div class="col-md-2" v-if="showLatLng">
                     <label class="control-label">{{ __('voyager::generic.latitude') }}</label>
                     <input
-                        class="form-control"
+                        class="form-control input-sm"
                         type="number"
                         step="any"
                         name="{{ $row->field }}[lat]"
@@ -50,7 +50,7 @@
                 <div class="col-md-2" v-if="showLatLng">
                     <label class="control-label">{{ __('voyager::generic.longitude') }}</label>
                     <input
-                        class="form-control"
+                        class="form-control input-sm"
                         type="number"
                         step="any"
                         name="{{ $row->field }}[lng]"

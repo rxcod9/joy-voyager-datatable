@@ -71,9 +71,13 @@
                     }
                 });
 
-                $('#quick_create_modal{{ $dataId }} select.select2').select2({width: '100%'});
+                $('#quick_create_modal{{ $dataId }} select.select2').select2({
+                    dropdownParent: $('#quick_create_modal{{ $dataId }}'),
+                    width: '100%'
+                });
                 $('#quick_create_modal{{ $dataId }} select.select2-ajax').each(function() {
                     $(this).select2({
+                        dropdownParent: $('#quick_create_modal{{ $dataId }}'),
                         width: '100%',
                         tags: $(this).hasClass('taggable'),
                         createTag: function(params) {

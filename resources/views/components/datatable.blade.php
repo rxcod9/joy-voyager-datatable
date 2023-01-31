@@ -101,7 +101,7 @@
                     // "colReorder" => true,
                     "stateSave" => config('joy-voyager-datatable.stateSave', true),
                     "ajax" => [
-                        'url' => route('voyager.'.$dataType->slug.'.post-ajax', ['showSoftDeleted' => $showSoftDeleted]),
+                        'url' => route('voyager.'.$dataType->slug.'.post-ajax', ['lense' => $activeLens, 'showSoftDeleted' => $showSoftDeleted]),
                         'type' => 'POST',
                     ],
                     "columns" => \dataTypeTableColumns($dataType, $showCheckboxColumn, $searchableColumns, $sortableColumns),
@@ -122,16 +122,16 @@
                 }
             );
 
-            var table = $('#wrapper{{ $dataId }} #dataTable{{ $dataId }}').DataTable(options);
+            var table{{ $dataId }} = $('#wrapper{{ $dataId }} #dataTable{{ $dataId }}').DataTable(options);
 
-            const initColumnFilters = function(el) {
-                console.log('initColumnFilters');
-                const table = $(el).DataTable();
+            const initColumnFilters{{ $dataId }} = function(el) {
+                console.log('initColumnFilters{{ $dataId }}');
+                const dataTable{{ $dataId }} = $(el).DataTable();
                 $(el).DataTable().table().columns().eq(0).each(function(colIdx) {
 
                     // cell
-                    var cell = $('thead.dt-col-filters tr th')
-                        .eq($(table.table().column(colIdx).header()).index());
+                    var cell = $('thead.dt-col-filters tr th', el)
+                        .eq($(dataTable{{ $dataId }}.table().column(colIdx).header()).index());
                     const filterType = cell.data('type');
 
                     switch (filterType) {
@@ -143,8 +143,9 @@
                             $('input', cell)
                                 .off('keyup change')
                                 .on('keyup change', debounce(function (e) {
+                                    console.log('e', e);
                                     e.stopPropagation();
-                                    table.table().column(colIdx).search($(this).val()).draw();
+                                    dataTable{{ $dataId }}.table().column(colIdx).search($(this).val()).draw();
                             }, 500));
                             break;
                         case 'timestamp':
@@ -156,7 +157,19 @@
                                     const parent = $(this).closest('.form-group');
                                     const fromElValue = $('input[type="datetime"][data-filter-group=' + filterGroup + '][data-filter-group-from]', parent).val();
                                     const toElValue = $('input[type="datetime"][data-filter-group=' + filterGroup + '][data-filter-group-to]', parent).val();
-                                    table.table().column(colIdx).search([fromElValue, toElValue]).draw();
+                                    dataTable{{ $dataId }}.table().column(colIdx).search([fromElValue, toElValue]).draw();
+                            }, 500));
+                            break;
+                        case 'number':
+                            $('input[type="number"]', cell)
+                                .off('keyup change')
+                                .on('keyup change', debounce(function (e) {
+                                    e.stopPropagation();
+                                    const filterGroup = $(this).data('filter-group');
+                                    const parent = $(this).closest('.form-group');
+                                    const fromElValue = $('input[type="number"][data-filter-group=' + filterGroup + '][data-filter-group-from]', parent).val();
+                                    const toElValue = $('input[type="number"][data-filter-group=' + filterGroup + '][data-filter-group-to]', parent).val();
+                                    dataTable{{ $dataId }}.table().column(colIdx).search([fromElValue, toElValue]).draw();
                             }, 500));
                             break;
                         case 'date':
@@ -168,7 +181,7 @@
                                     const parent = $(this).closest('.form-group');
                                     const fromElValue = $('input[type="date"][data-filter-group=' + filterGroup + '][data-filter-group-from]', parent).val();
                                     const toElValue = $('input[type="date"][data-filter-group=' + filterGroup + '][data-filter-group-to]', parent).val();
-                                    table.table().column(colIdx).search([fromElValue, toElValue]).draw();
+                                    dataTable{{ $dataId }}.table().column(colIdx).search([fromElValue, toElValue]).draw();
                             }, 500));
                             break;
                         case 'image':
@@ -178,7 +191,7 @@
                             $('select', cell)
                                 .off('change.col-filter-' + filterType)
                                 .on('change.col-filter-' + filterType, function (e) {
-                                    table.table().column(colIdx).search($(this).val()).draw();
+                                    dataTable{{ $dataId }}.table().column(colIdx).search($(this).val()).draw();
                             });
                             break;
                         case 'relationship':
@@ -189,7 +202,7 @@
                                     $('select', cell)
                                         .off('change.col-filter-' + filterType + '-' + relationshipType)
                                         .on('change.col-filter-' + filterType + '-' + relationshipType, function (e) {
-                                            table.table().column(colIdx).search($(this).val()).draw();
+                                            dataTable{{ $dataId }}.table().column(colIdx).search($(this).val()).draw();
                                     });
                                     break;
                                 case 'morphTo':
@@ -202,13 +215,13 @@
                                         morphToId.val([]).trigger('change');
                                         morphToId.on('change.col-filter-' + filterType + '-' + relationshipType + '-id', changeMorphToIdHandler);
 
-                                        table.table().column(colIdx).search(morphToType.val() + ',,' + morphToId.val().join(',')).draw();
+                                        dataTable{{ $dataId }}.table().column(colIdx).search(morphToType.val() + ',,' + morphToId.val().join(',')).draw();
                                     };
                                     const changeMorphToIdHandler = function (e) {
                                         const parent = $(this).closest('.form-group');
                                         const morphToType = $('.select2-morph-to-type', parent);
                                         const morphToId = $('.select2-morph-to-id', parent);
-                                        table.table().column(colIdx).search(morphToType.val() + ',,' + morphToId.val().join(',')).draw();
+                                        dataTable{{ $dataId }}.table().column(colIdx).search(morphToType.val() + ',,' + morphToId.val().join(',')).draw();
                                     };
                                     $('select.select2-morph-to-type', cell)
                                         .off('change.select2-morph-to-type')
@@ -232,14 +245,14 @@
                 });
             };
 
-            const destroyColumnFilters = function(el) {
-                console.log('destroyColumnFilters');
-                const table = $(el).DataTable();
+            const destroyColumnFilters{{ $dataId }} = function(el) {
+                console.log('destroyColumnFilters{{ $dataId }}');
+                const dataTable{{ $dataId }} = $(el).DataTable();
                 $(el).DataTable().table().columns().eq(0).each(function(colIdx) {
 
                     // cell
-                    var cell = $('thead.dt-col-filters tr th')
-                        .eq($(table.table().column(colIdx).header()).index());
+                    var cell = $('thead.dt-col-filters tr th', el)
+                        .eq($(dataTable{{ $dataId }}.table().column(colIdx).header()).index());
                     const filterType = cell.data('type');
 
                     switch (filterType) {
@@ -254,6 +267,10 @@
                         case 'timestamp':
                             $('input[type="datetime"]', cell)
                                 .off('dp.change');
+                            break;
+                        case 'number':
+                            $('input[type="number"]', cell)
+                                .off('keyup change');
                             break;
                         case 'date':
                             $('input[type="date"]', cell)
@@ -294,15 +311,15 @@
                 });
             };
 
-            const clearColumnFilters = function(el) {
-                console.log('clearColumnFilters');
-                destroyColumnFilters(el);
-                const table = $(el).DataTable();
+            const clearColumnFilters{{ $dataId }} = function(el) {
+                console.log('clearColumnFilters{{ $dataId }}');
+                destroyColumnFilters{{ $dataId }}(el);
+                const dataTable{{ $dataId }} = $(el).DataTable();
                 $(el).DataTable().table().columns().eq(0).each(function(colIdx) {
 
                     // cell
-                    var cell = $('thead.dt-col-filters tr th')
-                        .eq($(table.table().column(colIdx).header()).index());
+                    var cell = $('thead.dt-col-filters tr th', el)
+                        .eq($(dataTable{{ $dataId }}.table().column(colIdx).header()).index());
                     const filterType = cell.data('type');
 
                     switch (filterType) {
@@ -315,6 +332,9 @@
                             break;
                         case 'timestamp':
                             $('input[type="datetime"]', cell).val(null);
+                            break;
+                        case 'number':
+                            $('input[type="number"]', cell).val(null);
                             break;
                         case 'date':
                             $('input[type="date"]', cell).val(null);
@@ -362,23 +382,23 @@
                     }
 
                     // reset filters
-                    table.table().column(colIdx).search('');
+                    dataTable{{ $dataId }}.table().column(colIdx).search('');
                 });
-                initColumnFilters(el);
-                table.table().draw();
+                initColumnFilters{{ $dataId }}(el);
+                dataTable{{ $dataId }}.table().draw();
             };
 
-            initColumnFilters($('#wrapper{{ $dataId }} #dataTable{{ $dataId }}'));
+            initColumnFilters{{ $dataId }}($('#wrapper{{ $dataId }} #dataTable{{ $dataId }}'));
 
-            $('#wrapper{{ $dataId }} .dt-col-reset-filters').off('click');
-            $('#wrapper{{ $dataId }} .dt-col-reset-filters').on('click', function(e) {
+            $('#wrapper{{ $dataId }} #dataTable{{ $dataId }} .dt-col-reset-filters').off('click');
+            $('#wrapper{{ $dataId }} #dataTable{{ $dataId }} .dt-col-reset-filters').on('click', function(e) {
                 e.stopPropagation();
-                clearColumnFilters($('#wrapper{{ $dataId }} #dataTable{{ $dataId }}'));
+                clearColumnFilters{{ $dataId }}($('#wrapper{{ $dataId }} #dataTable{{ $dataId }}'));
                 return false;
             });
 
-            $('#wrapper{{ $dataId }} .dt-col-reload').off('click');
-            $('#wrapper{{ $dataId }} .dt-col-reload').on('click', function(e) {
+            $('#wrapper{{ $dataId }} #dataTable{{ $dataId }} .dt-col-reload').off('click');
+            $('#wrapper{{ $dataId }} #dataTable{{ $dataId }} .dt-col-reload').on('click', function(e) {
                 e.stopPropagation();
                 $('#wrapper{{ $dataId }} #dataTable{{ $dataId }}').DataTable().ajax.reload();
                 return false;

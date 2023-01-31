@@ -33,6 +33,9 @@
         @include('joy-voyager-datatable::bread.partials.group-actions', ['actions' => $actions, 'dataType' => $dataType, 'data' => null])
         @include('voyager::multilingual.language-selector')
     </div>
+    <div class="container-fluid">
+        @include('joy-voyager-datatable::bread.partials.group-lenses', ['lenses' => $lenses, 'dataType' => $dataType, 'data' => null])
+    </div>
 @stop
 
 @section('content')
@@ -40,7 +43,7 @@
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
-                <x-joy-voyager-datatable :slug="$dataType->slug" />
+                <x-joy-voyager-datatable :slug="$dataType->slug" :active-lens="$activeLens" />
             </div>
         </div>
     </div>
@@ -74,6 +77,7 @@
                 $params = [
                     // 'order_by' => $orderBy,
                     // 'sort_order' => $sortOrder,
+                    'lense' => $activeLens,
                 ];
             @endphp
             $(function() {

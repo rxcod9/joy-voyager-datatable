@@ -16,12 +16,14 @@
             @endif
         </th>
         @endforeach
+        @if(!($withoutActions ?? false))
         <th class="actions text-right dt-not-orderable dt-filter-actions">
-            <!-- {{ __('voyager::generic.actions') }} -->
+            {{-- {{ __('voyager::generic.actions') }} --}}
             @if(!$showCheckboxColumn)
                 <a href="javascript:;" class="dt-col-reload"><i class="fa fa-refresh"></i></a>
                 <a href="javascript:;" class="dt-col-reset-filters"><i class="fa fa-remove"></i></a>
             @endif
         </th>
+        @endif
     </tr>
 </thead>

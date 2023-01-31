@@ -80,7 +80,7 @@ class QuickAdd extends Component
         return Voyager::view($view, [
             'dataType'            => $dataType,
             'isModelTranslatable' => $isModelTranslatable,
-            'dataId'              => $this->dataId,
+            'dataId'              => $this->dataId ? \Str::studly($this->dataId) : null,
         ]);
     }
 }

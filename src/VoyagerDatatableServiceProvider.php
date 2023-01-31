@@ -3,6 +3,7 @@
 namespace Joy\VoyagerDatatable;
 
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -40,6 +41,29 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
         );
         TcgVoyager::addAction(\Joy\VoyagerDatatable\Actions\PreviewAction::class);
         TcgVoyager::addAction(\Joy\VoyagerDatatable\Actions\QuickEditAction::class);
+
+        Request::macro('activeLens', function () {
+            return $this->query('lense');
+        });
+
+        Request::macro('lens', function ($dataType, $model) {
+            $activeLens = $this->activeLens();
+
+            if (!$activeLens) {
+                return;
+            }
+
+            $lens = collect(VoyagerFacade::lenses())->first(function ($lens) use ($activeLens, $dataType, $model) {
+                $lens = new $lens($dataType, $model);
+                return $lens->getRouteKey() === $activeLens;
+            });
+
+            if (!$lens) {
+                return;
+            }
+
+            return new $lens($dataType, $model);
+        });
 
         $this->registerPublishables();
 

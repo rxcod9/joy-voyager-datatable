@@ -10,6 +10,7 @@ use Illuminate\View\Component;
 use TCG\Voyager\Facades\Voyager;
 use Joy\VoyagerCore\Http\Controllers\Traits\BreadRelationshipParser;
 use TCG\Voyager\Models\DataType;
+use Joy\VoyagerDatatable\Facades\Voyager as VoyagerDatatableVoyager;
 
 class Datatable extends Component
 {
@@ -28,6 +29,13 @@ class Datatable extends Component
      * @var string
      */
     protected $slug;
+
+    /**
+     * The activeLens.
+     *
+     * @var string
+     */
+    protected $activeLens;
 
     /**
      * The withLabel.
@@ -88,6 +96,7 @@ class Datatable extends Component
     public function __construct(
         Request $request,
         string $slug,
+        ?string $activeLens = null,
         ?bool $withLabel = null,
         ?bool $autoWidth = false,
         ?array $columnDefs = [],
@@ -97,6 +106,7 @@ class Datatable extends Component
     ) {
         $this->request         = $request;
         $this->slug            = $slug;
+        $this->activeLens      = $activeLens;
         $this->withLabel       = $withLabel;
         $this->autoWidth       = $autoWidth;
         $this->columnDefs      = $columnDefs;
@@ -156,6 +166,17 @@ class Datatable extends Component
             }
         }
 
+        // Lenss
+        $lenses = [];
+
+        foreach (VoyagerDatatableVoyager::lenses() as $lens) {
+            $lens = new $lens($dataType, $model);
+
+            if (isLensEnabled($dataType) && $lens->shouldLensDisplayOnDataType()) {
+                $lenses[] = $lens;
+            }
+        }
+
         // Define showCheckboxColumn
         $showCheckboxColumn = false;
         if (Auth::user()->can('delete', app($dataType->model_name))) {
@@ -200,6 +221,8 @@ class Datatable extends Component
 
         return Voyager::view($view, [
             'actions'               => $actions,
+            'lenses'                => $lenses,
+            'activeLens'            => $this->activeLens,
             'dataType'              => $dataType,
             'filterDataTypeContent' => $filterDataTypeContent,
             'isModelTranslatable'   => $isModelTranslatable,
@@ -216,7 +239,7 @@ class Datatable extends Component
             'columnDefs'            => $this->columnDefs,
             'withoutCheckbox'       => $this->withoutCheckbox,
             'withoutActions'        => $this->withoutActions,
-            'dataId'                => $this->dataId,
+            'dataId'                => $this->dataId ? \Str::studly($this->dataId) : null,
         ]);
     }
 

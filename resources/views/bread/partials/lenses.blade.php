@@ -1,0 +1,1 @@
+<a href="{{ $lens->getRoute($dataType->name) }}" {!! $lens->convertAttributesToHtml() !!}><i class="{{ $lens->getIcon() }}"></i>  {{ $lens->getTitle() }}</a>

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Joy\VoyagerDatatable\Facades\Voyager as VoyagerDatatableVoyager;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Models\DataType;
 
@@ -29,6 +31,11 @@ trait IndexAction
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
+        $activeLens = $request->query('lense', Session::get($slug . '_activeLens'));
+        if($activeLens) {
+            Session::put($slug . '_activeLens', $activeLens);
+        }
+
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
@@ -47,6 +54,8 @@ trait IndexAction
             $model = app($dataType->model_name);
 
             $query = $model::select($dataType->name . '.*');
+
+            applyLenseScope($query, $request->lens($dataType, $model));
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope' . ucfirst($dataType->scope))) {
                 $query->{$dataType->scope}();
@@ -105,6 +114,17 @@ trait IndexAction
             }
         }
 
+        // Lenss
+        $lenses = [];
+
+        foreach (VoyagerDatatableVoyager::lenses() as $lens) {
+            $lens = new $lens($dataType, $model);
+
+            if (isLensEnabled($dataType) && $lens->shouldLensDisplayOnDataType()) {
+                $lenses[] = $lens;
+            }
+        }
+
         // Define showCheckboxColumn
         $showCheckboxColumn = false;
         if (Auth::user()->can('delete', app($dataType->model_name))) {
@@ -135,6 +155,8 @@ trait IndexAction
 
         return Voyager::view($view, compact(
             'actions',
+            'lenses',
+            'activeLens',
             'dataType',
             'isModelTranslatable',
             'orderBy',

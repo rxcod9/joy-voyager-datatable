@@ -31,6 +31,8 @@ trait AjaxAction
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
+        $activeLens = $request->query('lense');
+
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
@@ -52,6 +54,8 @@ trait AjaxAction
             $model = app($dataType->model_name);
 
             $query = $model::select($dataType->name . '.*');
+
+            applyLenseScope($query, $request->lens($dataType, $model));
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope' . ucfirst($dataType->scope))) {
                 $query->{$dataType->scope}();

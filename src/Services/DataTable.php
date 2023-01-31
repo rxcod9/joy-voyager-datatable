@@ -3,6 +3,7 @@
 namespace Joy\VoyagerDatatable\Services;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,14 +15,17 @@ use Yajra\DataTables\DataTables;
 class DataTable
 {
     protected Column $column;
+    protected GlobalSearch $globalSearch;
     protected Filter $filter;
 
     public function __construct(
         Column $column,
+        GlobalSearch $globalSearch,
         Filter $filter
     ) {
-        $this->column = $column;
-        $this->filter = $filter;
+        $this->column             = $column;
+        $this->globalSearch = $globalSearch;
+        $this->filter             = $filter;
     }
 
     /**
@@ -132,28 +136,19 @@ class DataTable
         if (!modelHasScope($modelClass, 'globalSearch')) {
             Log::debug('Your model must implement scopeGlobalSearch');
             $model = app($dataType->model_name);
-            $dataTable->filter(function ($query) use ($request, $model) {
-                if ($request->has('search.value') && $request->input('search.value')) {
-                    switch ($model->getKeyType()) {
-                        case 'int':
-                            $query->whereKey((int) $request->input('search.value'));
-                            break;
-                        case 'string':
-                            $query->whereKey($request->input('search.value'));
-                            break;
-
-                        default:
-                            // code...
-                            break;
-                    }
+            $dataTable->filter(function ($query) use ($request, $dataType) {
+                $keyword = $request->input('search.value');
+                if ($request->has('search.value') && !(is_null($keyword) || $keyword === '' || $keyword === ',')) {
+                    $this->globalSearch->handle($query, $keyword, $dataType, $request);
                 }
             });
             return;
         }
 
         $dataTable->filter(function ($query) use ($request) {
-            if ($request->has('search.value') && $request->input('search.value')) {
-                $query->globalSearch($request->input('search.value'));
+            $keyword = $request->input('search.value');
+            if ($request->has('search.value') && !(is_null($keyword) || $keyword === '' || $keyword === ',')) {
+                $query->globalSearch($keyword);
             }
         });
     }

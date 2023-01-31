@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Joy\VoyagerDatatable\Lenses\LensInterface;
 use TCG\Voyager\Models\DataRow;
 use TCG\Voyager\Models\DataType;
 
@@ -200,5 +201,39 @@ if (!function_exists('safeCarbonParse')) {
         }
 
         return null;
+    }
+}
+
+if (!function_exists('applyLenseScope')) {
+    /**
+     * Is valid carbon date
+     *
+     * @param $query
+     */
+    function applyLenseScope($query, ?LensInterface $lens = null)
+    {
+        if (!$lens) {
+            return;
+        }
+
+        $lens->applyScope($query);
+    }
+}
+
+if (!function_exists('isLensEnabled')) {
+    /**
+     * Can view lens
+     */
+    function isLensEnabled(DataType $dataType)
+    {
+        return config('joy-voyager-datatable.lens.enabled', true) !== false
+            && isInPatterns(
+                $dataType->slug,
+                config('joy-voyager-datatable.lens.allowed_slugs', ['*'])
+            )
+            && !isInPatterns(
+                $dataType->slug,
+                config('joy-voyager-datatable.lens.not_allowed_slugs', [])
+            );
     }
 }

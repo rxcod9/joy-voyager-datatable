@@ -1,2 +1,2 @@
-<input type="color" class="form-control" name="{{ $row->field }}"
+<input type="color" class="form-control input-sm" name="{{ $row->field }}"
        value="{{ $dataTypeContent->{$row->field} }}">

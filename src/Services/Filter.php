@@ -46,7 +46,18 @@ class Filter
         }
 
         // You can disable filters by row field for different data types
-        if (in_array($row->field, config('joy-voyager-datatable.' . $dataType->slug . '.filters.hidden', ['hidden']))) {
+        if (in_array($row->field, config('joy-voyager-datatable.filters.' . $dataType->slug . '.hidden', ['hidden']))) {
+            return;
+        }
+
+        if ($dataType->model_name && $row->field == (app($dataType->model_name))->getKeyName()) {
+            $this->filterByKey(
+                $query,
+                $keyword,
+                $row,
+                $dataType,
+                $request
+            );
             return;
         }
 
@@ -106,13 +117,13 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        $query->when($keyword === '1', function ($query) use ($row, $keyword) {
+        $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row, $keyword) {
             $query->where(function ($query) use ($row, $keyword) {
                 $query
                     ->whereNotNull($row->field)
                     ->where($row->field, '!=', config('voyager.user.default_avatar', 'users/default.png'));
             });
-        })->when($keyword === '0', function ($query) use ($row, $keyword) {
+        })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row, $keyword) {
             $query->where(function ($query) use ($row, $keyword) {
                 $query
                     ->whereNull($row->field)
@@ -209,13 +220,16 @@ class Filter
         Request $request
     ): void {
         // @TODO Not implemented yet.
-        // $model                 = $query->getModel();
-        // $options               = $row->details;
-        // $belongsToManyRelation = $model->belongsToMany($options->model, $options->pivot_table, $options->foreign_pivot_key ?? null, $options->related_pivot_key ?? null, $options->parent_key ?? null, $options->key);
-        // dd($belongsToManyRelation, $options->model, $options->pivot_table, $options->foreign_pivot_key ?? null, $options->related_pivot_key ?? null, $options->parent_key ?? null, $options->key);
-        // $query->whereHas($belongsToManyRelation, function ($query) use ($belongsToManyRelation) {
-        //     $query->wherePivotNotNull($belongsToManyRelation->getForeignPivotKeyName());
-        // });
+        $keywords              = explode(',', $keyword);
+        $model                 = $query->getModel();
+        $options               = $row->details;
+        $belongsToManyRelation = $model->belongsToMany($options->model, $options->pivot_table, $options->foreign_pivot_key ?? null, $options->related_pivot_key ?? null, $options->parent_key ?? null, $options->key);
+
+        $query->whereExists(function ($query) use ($model, $belongsToManyRelation, $options, $keywords) {
+            $query->from($options->pivot_table)
+                ->whereColumn($options->pivot_table . '.' . $belongsToManyRelation->getForeignPivotKeyName(), $model->getTable() . '.' . $model->getKeyName())
+                ->whereIn($belongsToManyRelation->getRelatedPivotKeyName(), $keywords);
+        });
     }
 
     /**
@@ -374,9 +388,9 @@ class Filter
         Request $request
     ): void {
         $options = $row->details;
-        $query->when($keyword === '1', function ($query) use ($row, $options) {
+        $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row, $options) {
             $query->where($row->field, $options->on ?? '1')->whereNotNull($row->field);
-        })->when($keyword === '0', function ($query) use ($row, $options) {
+        })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row, $options) {
             $query->where($row->field, $options->on ?? '0')->orWhereNull($row->field);
         });
     }
@@ -432,7 +446,27 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO must check range
+        $keywords = explode(',', $keyword);
+        $from     = $keywords[0] ?? null;
+        $to       = $keywords[1] ?? null;
+
+        if (count($keywords) === 1 && $from) {
+            $query->whereDate($row->field, $from);
+            return;
+        }
+
+        if (count($keywords) === 2) {
+            $query->when($from && $to, function ($query) use ($row, $from, $to) {
+                $query->whereBetween($row->field, [$from, $to]);
+            }, function ($query) use ($row, $from, $to) {
+                $query->when($from, function ($query) use ($row, $from) {
+                    $query->where($row->field, '>=', $from);
+                })->when($to, function ($query) use ($row, $to) {
+                    $query->where($row->field, '<=', $to);
+                });
+            });
+            return;
+        }
     }
 
     /**
@@ -470,9 +504,9 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        $query->when($keyword === '1', function ($query) use ($row, $keyword) {
+        $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row, $keyword) {
             $query->whereNotNull($row->field);
-        })->when($keyword === '0', function ($query) use ($row, $keyword) {
+        })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row, $keyword) {
             $query->whereNull($row->field);
         });
     }
@@ -589,7 +623,34 @@ class Filter
             return;
         }
 
-        // @FIXME if needs to filter in translations as well
-        $query->where($row->field, 'LIKE', '%' . $keyword . '%');
+        $query->whereTranslation($row->field, 'LIKE', '%' . $keyword . '%');
+    }
+
+    /**
+     * Filter by key
+     *
+     * @param Builder|QueryBuilder $query   Query
+     * @param mixed                $keyword Keyword
+     */
+    protected function filterByKey(
+        $query,
+        $keyword,
+        DataRow $row,
+        DataType $dataType,
+        Request $request
+    ) {
+        $model = app($dataType->model_name);
+        switch ($model->getKeyType()) {
+            case 'int':
+                $query->whereKey((int) $keyword);
+                break;
+            case 'string':
+                $query->whereKey($keyword);
+                break;
+
+            default:
+                // code...
+                break;
+        }
     }
 }

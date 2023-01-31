@@ -81,9 +81,12 @@
                     }
                 });
 
-                $('#inline_edit_modal{{ $dataId }} select.select2').select2({width: '100%'});
+                $('#inline_edit_modal{{ $dataId }} select.select2').select2({
+                    dropdownParent: $('#inline_edit_modal{{ $dataId }}'),
+                    width: '100%'});
                 $('#inline_edit_modal{{ $dataId }} select.select2-ajax').each(function() {
                     $(this).select2({
+                        dropdownParent: $('#inline_edit_modal{{ $dataId }}'),
                         width: '100%',
                         tags: $(this).hasClass('taggable'),
                         createTag: function(params) {
