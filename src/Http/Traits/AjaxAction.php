@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Joy\VoyagerDatatable\Services\Column;
 use Joy\VoyagerDatatable\Services\DataTable;
 use TCG\Voyager\Facades\Voyager;
@@ -31,7 +32,7 @@ trait AjaxAction
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
-        $activeLens = $request->query('lense');
+        $activeLens = $request->query('lense', Session::get($slug . '_activeLens'));
 
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();

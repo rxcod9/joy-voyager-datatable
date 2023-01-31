@@ -1,5 +1,5 @@
 @php
-    $activeLens = request()->query('lense', 'home');
+    $activeLens = request()->query('lense', \Session::get($dataType->slug . '_activeLens'));
     $crudLenses = collect($lenses)->filter(function($lens) {
         return Str::is([
             '*MyItemsLens',
@@ -27,8 +27,8 @@
 @endphp
 @if(collect($lenses)->count() > 0)
 <ul class="nav nav-tabs">
-    <li @if('home' === $activeLens) class="active" @endif>
-        <a href="{{ route('voyager.' . $dataType->slug . '.index') }}" class="pull-right home-lens">
+    <li @if(!$activeLens || $activeLens === 'home') class="active" @endif>
+        <a href="{{ route('voyager.' . $dataType->slug . '.index', ['lense' => 'home']) }}" class="pull-right home-lens">
             <i class="voyager-home"></i>  {{ __('joy-voyager-datatable::generic.home') }}
         </a>
     </li>

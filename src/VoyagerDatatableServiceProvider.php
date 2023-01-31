@@ -5,6 +5,7 @@ namespace Joy\VoyagerDatatable;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Joy\VoyagerDatatable\Events\FilterFormFieldsRegistered;
@@ -42,12 +43,12 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
         TcgVoyager::addAction(\Joy\VoyagerDatatable\Actions\PreviewAction::class);
         TcgVoyager::addAction(\Joy\VoyagerDatatable\Actions\QuickEditAction::class);
 
-        Request::macro('activeLens', function () {
-            return $this->query('lense');
+        Request::macro('activeLens', function ($dataType) {
+            return $this->query('lense', Session::get($dataType->slug . '_activeLens'));
         });
 
         Request::macro('lens', function ($dataType, $model) {
-            $activeLens = $this->activeLens();
+            $activeLens = $this->activeLens($dataType);
 
             if (!$activeLens) {
                 return;

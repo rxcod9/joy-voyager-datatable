@@ -32,9 +32,7 @@ trait IndexAction
         $slug = $this->getSlug($request);
 
         $activeLens = $request->query('lense', Session::get($slug . '_activeLens'));
-        if ($activeLens) {
-            Session::put($slug . '_activeLens', $activeLens);
-        }
+        Session::put($slug . '_activeLens', $activeLens);
 
         // GET THE DataType based on the slug
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
