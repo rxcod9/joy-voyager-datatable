@@ -75,13 +75,13 @@ class StatusActive extends AbstractLens
         $values  = array_values($options);
 
         if (in_array('Active', $keys)) {
-            $query->whereStatus('Active');
+            $query->where($this->dataType->name . '.status', 'Active');
             return;
         }
 
         if (in_array('Active', $values)) {
             $key = array_search('Active', $options);
-            $query->whereStatus($key);
+            $query->where($this->dataType->name . '.status', $key);
             return;
         }
     }

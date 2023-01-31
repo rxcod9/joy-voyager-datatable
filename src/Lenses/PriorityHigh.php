@@ -75,13 +75,13 @@ class PriorityHigh extends AbstractLens
         $values  = array_values($options);
 
         if (in_array('High', $keys)) {
-            $query->wherePriority('High');
+            $query->where($this->dataType->name . '.priority', 'High');
             return;
         }
 
         if (in_array('High', $values)) {
             $key = array_search('High', $options);
-            $query->wherePriority($key);
+            $query->where($this->dataType->name . '.priority', $key);
             return;
         }
     }

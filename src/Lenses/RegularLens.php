@@ -63,9 +63,9 @@ class RegularLens extends AbstractLens
         $role = Voyager::model('Role')->where('name', 'user')->firstOrFail();
         $query->where(function ($query) use ($role) {
             $query
-                ->whereRoleId($role->id)
+                ->where($this->dataType->name . '.role_id', $role->id)
                 ->orWhereHas('roles', function ($query) use ($role) {
-                    $query->whereId($role->id);
+                    $query->where('roles.id', $role->id);
                 });
         });
     }

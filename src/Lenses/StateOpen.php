@@ -75,13 +75,13 @@ class StateOpen extends AbstractLens
         $values  = array_values($options);
 
         if (in_array('Open', $keys)) {
-            $query->whereState('Open');
+            $query->where($this->dataType->name . '.state', 'Open');
             return;
         }
 
         if (in_array('Open', $values)) {
             $key = array_search('Open', $options);
-            $query->whereState($key);
+            $query->where($this->dataType->name . '.state', $key);
             return;
         }
     }

@@ -75,13 +75,13 @@ class StatusNew extends AbstractLens
         $values  = array_values($options);
 
         if (in_array('New', $keys)) {
-            $query->whereStatus('New');
+            $query->where($this->dataType->name . '.status', 'New');
             return;
         }
 
         if (in_array('New', $values)) {
             $key = array_search('New', $options);
-            $query->whereStatus($key);
+            $query->where($this->dataType->name . '.status', $key);
             return;
         }
     }

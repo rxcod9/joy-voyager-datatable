@@ -59,6 +59,6 @@ class RecentlyCreated extends AbstractLens
 
     public function applyScope($query)
     {
-        $query->whereBetween('created_at', [now()->subDays(7)->startOfDay(), now()]);
+        $query->whereBetween($this->dataType->name . '.created_at', [now()->subDays(7)->startOfDay(), now()]);
     }
 }

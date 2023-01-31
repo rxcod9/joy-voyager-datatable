@@ -59,6 +59,6 @@ class UnassignedLens extends AbstractLens
 
     public function applyScope($query)
     {
-        $query->whereNull('assigned_to_id');
+        $query->whereNull($this->dataType->name . '.assigned_to_id');
     }
 }

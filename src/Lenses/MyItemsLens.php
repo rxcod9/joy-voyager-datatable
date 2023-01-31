@@ -63,12 +63,12 @@ class MyItemsLens extends AbstractLens
         $hasCreatedBy  = $this->dataType->rows->where('field', 'created_by_id')->first();
         $hasModifiedBy = $this->dataType->rows->where('field', 'modified_by_id')->first();
         $query
-            ->whereAssignedToId(Auth::id())
+            ->where($this->dataType->name . '.assigned_to_id', Auth::id())
             ->when($hasCreatedBy, function ($query) {
-                $query->orWhere('created_by_id', Auth::id());
+                $query->orWhere($this->dataType->name . '.created_by_id', Auth::id());
             })
             ->when($hasModifiedBy, function ($query) {
-                $query->orWhere('modified_by_id', Auth::id());
+                $query->orWhere($this->dataType->name . '.modified_by_id', Auth::id());
             });
     }
 }
