@@ -3,7 +3,6 @@
 namespace Joy\VoyagerDatatable\Lenses;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UnassignedLens extends AbstractLens
 {

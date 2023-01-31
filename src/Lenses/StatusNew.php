@@ -3,7 +3,6 @@
 namespace Joy\VoyagerDatatable\Lenses;
 
 use Illuminate\Http\Request;
-use Joy\VoyagerDatatable\Lenses\AbstractLens;
 
 class StatusNew extends AbstractLens
 {

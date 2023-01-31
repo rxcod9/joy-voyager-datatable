@@ -32,7 +32,7 @@ trait IndexAction
         $slug = $this->getSlug($request);
 
         $activeLens = $request->query('lense', Session::get($slug . '_activeLens'));
-        if($activeLens) {
+        if ($activeLens) {
             Session::put($slug . '_activeLens', $activeLens);
         }
 

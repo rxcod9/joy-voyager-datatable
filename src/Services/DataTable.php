@@ -23,9 +23,9 @@ class DataTable
         GlobalSearch $globalSearch,
         Filter $filter
     ) {
-        $this->column             = $column;
+        $this->column       = $column;
         $this->globalSearch = $globalSearch;
-        $this->filter             = $filter;
+        $this->filter       = $filter;
     }
 
     /**
