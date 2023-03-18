@@ -161,6 +161,31 @@ return [
         'not_allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_PREVIEW_NOT_ALLOWED_SLUGS', ''))),
     ],
 
+    'quick-delete' => [
+        /*
+        * If enabled for voyager-datatable quick delete package.
+        */
+        'enabled' => env('VOYAGER_DATATABLE_QUICK_DELETE_ENABLED', true),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is enabled
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_DELETE_ALLOWED_SLUGS', '*'))),
+
+        /*
+        | Here you can specify for which data type slugs bulk-update is not allowed
+        | 
+        | Supported: "*", or data type slugs "users", "roles"
+        |
+        */
+
+        'not_allowed_slugs' => array_filter(explode(',', env('VOYAGER_DATATABLE_QUICK_DELETE_NOT_ALLOWED_SLUGS', ''))),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Lens config

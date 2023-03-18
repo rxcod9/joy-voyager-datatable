@@ -33,9 +33,11 @@
         @include('joy-voyager-datatable::bread.partials.group-actions', ['actions' => $actions, 'dataType' => $dataType, 'data' => null])
         @include('voyager::multilingual.language-selector')
     </div>
+    @if(config('joy-voyager-datatable.lens.enabled', true))
     <div class="container-fluid">
         @include('joy-voyager-datatable::bread.partials.group-lenses', ['lenses' => $lenses, 'dataType' => $dataType, 'data' => null])
     </div>
+    @endif
 @stop
 
 @section('content')
