@@ -219,7 +219,6 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet.
         $keywords              = explode(',', $keyword);
         $model                 = $query->getModel();
         $options               = $row->details;
@@ -280,7 +279,14 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet.
+        $keywords = explode(',', $keyword);
+        $query->where(function ($query) use ($row, $keywords) {
+            foreach ($keywords as $keyword) {
+                $query->orWhere(function ($query) use ($row, $keyword) {
+                    $query->whereJsonContains($row->field . '->' . $keyword, $keyword);
+                });
+            }
+        });
     }
 
     /**
@@ -296,7 +302,14 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet.
+        $keywords = explode(',', $keyword);
+        $query->where(function ($query) use ($row, $keywords) {
+            foreach ($keywords as $keyword) {
+                $query->orWhere(function ($query) use ($row, $keyword) {
+                    $query->whereJsonContains($row->field . '->' . $keyword, $keyword);
+                });
+            }
+        });
     }
 
     /**
@@ -389,9 +402,9 @@ class Filter
     ): void {
         $options = $row->details;
         $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row, $options) {
-            $query->where($row->field, $options->on ?? '1')->whereNotNull($row->field);
+            $query->where($row->field, '1')->whereNotNull($row->field);
         })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row, $options) {
-            $query->where($row->field, $options->on ?? '0')->orWhereNull($row->field);
+            $query->where($row->field, '0')->orWhereNull($row->field);
         });
     }
 
@@ -451,7 +464,7 @@ class Filter
         $to       = $keywords[1] ?? null;
 
         if (count($keywords) === 1 && $from) {
-            $query->whereDate($row->field, $from);
+            $query->where($row->field, $from);
             return;
         }
 
@@ -504,10 +517,18 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row, $keyword) {
-            $query->whereNotNull($row->field);
-        })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row, $keyword) {
-            $query->whereNull($row->field);
+        $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row) {
+            $query->where(function ($query) use ($row) {
+                $query
+                    ->whereNotNull($row->field)
+                    ->whereJsonLength($row->field, '<>', 0);
+            });
+        })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row) {
+            $query->where(function ($query) use ($row) {
+                $query
+                    ->whereNull($row->field)
+                    ->orWhereJsonLength($row->field, 0);
+            });
         });
     }
 
@@ -562,7 +583,11 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet.
+        $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row) {
+            $query->whereNotNull($row->field);
+        })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row) {
+            $query->whereNull($row->field);
+        });
     }
 
     /**
@@ -578,7 +603,19 @@ class Filter
         DataType $dataType,
         Request $request
     ): void {
-        // @TODO Not implemented yet.
+        $query->when($keyword === '1' || $keyword === 'Yes', function ($query) use ($row, $keyword) {
+            $query->where(function ($query) use ($row, $keyword) {
+                $query
+                    ->whereNotNull($row->field)
+                    ->whereJsonLength($row->field, '<>', 0);
+            });
+        })->when($keyword === '0' || $keyword === 'No', function ($query) use ($row, $keyword) {
+            $query->where(function ($query) use ($row, $keyword) {
+                $query
+                    ->whereNull($row->field)
+                    ->orWhereJsonLength($row->field, 0);
+            });
+        });
     }
 
     /**

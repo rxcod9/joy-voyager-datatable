@@ -46,6 +46,7 @@ return [
     'filters'        => [
         'type_hidden'   => [
             'password',
+            'coordinates',
         ],
         'hidden'   => [
             'deleted_at',

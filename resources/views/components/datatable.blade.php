@@ -139,6 +139,7 @@
                         case 'markdown_editor':
                         case 'rich_text_box':
                         case 'text_area':
+                        case 'color':
                         case 'text':
                             $('input', cell)
                                 .off('keyup change')
@@ -185,8 +186,13 @@
                             }, 500));
                             break;
                         case 'image':
+                        case 'multiple_images':
+                        case 'media_picker':
                         case 'file':
+                        case 'multiple_checkbox':
                         case 'checkbox':
+                        case 'radio_btn':
+                        case 'select_multiple':
                         case 'select_dropdown':
                             $('select', cell)
                                 .off('change.col-filter-' + filterType)
@@ -260,6 +266,7 @@
                         case 'markdown_editor':
                         case 'rich_text_box':
                         case 'text_area':
+                        case 'color':
                         case 'text':
                             $('input', cell)
                                 .off('keyup change');
@@ -277,8 +284,13 @@
                                 .off('change');
                             break;
                         case 'image':
+                        case 'multiple_images':
+                        case 'media_picker':
                         case 'file':
+                        case 'multiple_checkbox':
                         case 'checkbox':
+                        case 'radio_btn':
+                        case 'select_multiple':
                         case 'select_dropdown':
                             $('select', cell)
                                 .off('change.col-filter-' + filterType);
@@ -327,6 +339,7 @@
                         case 'markdown_editor':
                         case 'rich_text_box':
                         case 'text_area':
+                        case 'color':
                         case 'text':
                             $('input', cell).val(null);
                             break;
@@ -340,8 +353,13 @@
                             $('input[type="date"]', cell).val(null);
                             break;
                         case 'image':
+                        case 'multiple_images':
+                        case 'media_picker':
                         case 'file':
+                        case 'multiple_checkbox':
                         case 'checkbox':
+                        case 'radio_btn':
+                        case 'select_multiple':
                         case 'select_dropdown':
                             const selectEl = $('select', cell);
                             if(selectEl.prop('multiple')) {

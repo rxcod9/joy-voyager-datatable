@@ -260,7 +260,8 @@ class Column
 
         if (property_exists($row->details, 'options')) {
             if (!empty(json_decode($content))) {
-                $lastKey = end(array_keys(json_decode($content)));
+                $keys = array_keys(json_decode($content, true));
+                $lastKey = end($keys);
                 foreach (json_decode($content) as $key => $item) {
                     if (@$row->details->options->{$item}) {
                         $view .= $row->details->options->{$item} . ($key !== $lastKey ? ', ' : '');
@@ -287,8 +288,9 @@ class Column
         $content = null
     ): string {
         $view = '';
-        if (@count(json_decode($content)) > 0) {
-            $lastKey = end(array_keys(json_decode($content)));
+        if ($content && @count(json_decode($content, true)) > 0) {
+            $keys = array_keys(json_decode($content, true));
+            $lastKey = end($keys);
             foreach (json_decode($content) as $key => $item) {
                 if (@$row->details->options->{$item}) {
                     $view .= $row->details->options->{$item} . ($key !== $lastKey ? ', ' : '');
@@ -431,6 +433,10 @@ class Column
         DataType $dataType,
         $content = null
     ): string {
+        if (!$content || json_decode($content) === null) {
+            return '';
+        }
+
         $view = (string) view('voyager::multilingual.input-hidden-bread-browse', [
             'data' => $data,
             'row'  => $row
@@ -484,7 +490,7 @@ class Column
         DataType $dataType,
         $content = null
     ): string {
-        return (string) view('voyager::partials.coordinates-static-image');
+        return (string) view('voyager::partials.coordinates-static-image', ['data' => $data, 'row' => $row]);
     }
 
     /**

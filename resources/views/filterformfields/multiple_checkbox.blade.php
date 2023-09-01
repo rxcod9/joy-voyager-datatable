@@ -1,18 +1,11 @@
-<br>
-<?php $checked = false; ?>
-@if(isset($options->options))
-    @foreach($options->options as $key => $label)
-        @if(isset($dataTypeContent->{$row->field}))
-            @php
-                $checkedData = $dataTypeContent->{$row->field};
-                $checkedData = is_array($checkedData) ? $checkedData : json_decode($checkedData, true);
-                $checked = in_array($key, $checkedData);
-            @endphp
-        @else
-            <?php $checked = isset($options->checked) && $options->checked ? true : false; ?>
-        @endif
-
-        <input type="checkbox" name="{{ $row->field }}[{{$key}}]" {!! $checked ? 'checked="checked"' : '' !!} value="{{$key}}" id="{{$key}}"/>
-        <label for="{{$key}}">{{$label}}</label>
-    @endforeach
-@endif
+<?php $selected_value = (isset($dataTypeContent->{$row->field}) && !is_null($dataTypeContent->{$row->field})) ? $dataTypeContent->{$row->field} : null; ?>
+<select multiple class="form-control input-sm select2" name="{{ $row->field }}[]">
+    <option value="">{{__('voyager::generic.none')}}</option>
+    <?php $default = (isset($options->filter_default) && !isset($dataTypeContent->{$row->field})) ? $options->filter_default : null; ?>
+    @if(isset($options->options))
+        @foreach($options->options as $key => $option)
+            @continue($key === '')
+            <option value="{{ $key }}" @if($default === $key && $selected_value === NULL) selected="selected" @endif @if($selected_value === $key) selected="selected" @endif>{{ $option }}</option>
+        @endforeach
+    @endif
+</select>

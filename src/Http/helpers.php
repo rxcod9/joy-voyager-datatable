@@ -89,6 +89,10 @@ if (!function_exists('dataRowsMayHaveHtml')) {
             return true;
         }
 
+        if ($row->type == 'color') {
+            return true;
+        }
+
         if ($row->type == 'relationship') {
             return true;
         }
@@ -116,7 +120,7 @@ if (!function_exists('dataRowsMayHaveHtml')) {
         }
 
         if ($row->type == 'checkbox') {
-            return false;
+            return true;
         }
 
         if ($row->type == 'color') {

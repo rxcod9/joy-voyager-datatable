@@ -221,7 +221,7 @@ class VoyagerDatatableServiceProvider extends ServiceProvider
             'time',
             'timestamp',
             // 'hidden',
-            'coordinates',
+            // 'coordinates',
         ];
 
         foreach ($filterFilterFormFields as $filterFilterFormField) {
