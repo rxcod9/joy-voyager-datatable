@@ -260,7 +260,7 @@ class Column
 
         if (property_exists($row->details, 'options')) {
             if (!empty(json_decode($content))) {
-                $keys = array_keys(json_decode($content, true));
+                $keys    = array_keys(json_decode($content, true));
                 $lastKey = end($keys);
                 foreach (json_decode($content) as $key => $item) {
                     if (@$row->details->options->{$item}) {
@@ -289,7 +289,7 @@ class Column
     ): string {
         $view = '';
         if ($content && @count(json_decode($content, true)) > 0) {
-            $keys = array_keys(json_decode($content, true));
+            $keys    = array_keys(json_decode($content, true));
             $lastKey = end($keys);
             foreach (json_decode($content) as $key => $item) {
                 if (@$row->details->options->{$item}) {
