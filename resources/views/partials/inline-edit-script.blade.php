@@ -39,6 +39,7 @@
 </div>
 <!-- End Delete File Modal -->
 <script>
+
     var {{ \Str::camel($dataId) }}itemId;
     var {{ \Str::camel($dataId) }}inlineEditAction = `{{ route('voyager.'.$dataType->slug.'.inline-edit', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
     var {{ \Str::camel($dataId) }}inlineUpdateFormAction = `{{ route('voyager.'.$dataType->slug.'.inline-update', ['id' => '__ID__', 'field' => '__FIELD__']) }}`;
@@ -63,6 +64,60 @@
                 $('#inline_edit_modal{{ $dataId }} .modal-body').html(response);
 
                 $('#inline_edit_modal{{ $dataId }}').modal('show');
+
+                window.gMapVm = new Vue({ el: '#coordinates-formfield' });
+
+                var media_picker_element = document.querySelectorAll('div[id^="media_picker_"]');
+
+                // For each ace editor element on the page
+                for(var i = 0; i < media_picker_element.length; i++)
+                {
+                    new Vue({
+                        el: media_picker_element[i]
+                    });
+                }
+
+                var ace_editor_element = document.getElementsByClassName("ace_editor");
+
+                // For each ace editor element on the page
+                for(var i = 0; i < ace_editor_element.length; i++)
+                {
+
+                    //Define path for libs
+                    ace.config.set("basePath", $('meta[name="assets-path"]').attr('content')+"?path=js/ace/libs");
+
+                    // Create an ace editor instance
+                    var ace_editor = ace.edit(ace_editor_element[i].id);
+
+                    // Get the corresponding text area associated with the ace editor
+                    var ace_editor_textarea = document.getElementById(ace_editor_element[i].id + '_textarea');
+
+                    if(ace_editor_element[i].getAttribute('data-theme')){
+                        ace_editor.setTheme("ace/theme/" + ace_editor_element[i].getAttribute('data-theme'));
+                    }
+
+                    if(ace_editor_element[i].getAttribute('data-language')){
+                        ace_editor.getSession().setMode("ace/mode/" + ace_editor_element[i].getAttribute('data-language'));
+                    }
+                    
+                    ace_editor.on('change', function(event, el) {
+                        ace_editor_id = el.container.id;
+                        ace_editor_textarea = document.getElementById(ace_editor_id + '_textarea');
+                        ace_editor_instance = ace.edit(ace_editor_id);
+                        ace_editor_textarea.value = ace_editor_instance.getValue();
+                    });
+                }
+
+                /********** MARKDOWN EDITOR **********/
+
+                $('textarea.easymde').each(function () {
+                    var easymde = new EasyMDE({
+                        element: this
+                    });
+                    easymde.render();
+                });
+
+                /********** END MARKDOWN EDITOR **********/
 
                 $('#inline_edit_modal{{ $dataId }} .form-group .datepicker').datetimepicker();
 
@@ -195,6 +250,10 @@
         });
 
         return false;
+    });
+
+    $('#inline_edit_modal{{ $dataId }}').on('hidden.bs.modal', function () {
+        $('#inline_edit_modal{{ $dataId }} .modal-body').html('');
     });
     $('#inline_edit_modal{{ $dataId }}').on('click', 'form.form-inline-edit button[type="submit"]', function (e) {
     // $('#inline_edit_modal{{ $dataId }} form.form-inline-edit').submit(function (e) {

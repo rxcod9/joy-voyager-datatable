@@ -448,3 +448,128 @@
 @endpush
 @include('joy-voyager-datatable::bread.partials.actions-script', ['actions' => $actions, 'dataType' => $dataType, 'data' => null, 'dataId' => $dataId])
 @include('joy-voyager-datatable::partials.inline-edit-script', ['dataType' => $dataType, 'dataId' => $dataId])
+@once('coordinates')
+@push('javascript')
+<script>
+    Vue.component('coordinates', {
+        props: {
+            apiKey: {
+                type: String,
+                required: true,
+            },
+            points: {
+                type: Array,
+                required: true,
+            },
+            showAutocomplete: {
+                type: Boolean,
+                default: true,
+            },
+            showLatLng: {
+                type: Boolean,
+                default: true,
+            },
+            zoom: {
+                type: Number,
+                required: true,
+            }
+        },
+        data() {
+            return {
+                autocomplete: null,
+                lat: '',
+                lng: '',
+                map: null,
+                marker: null,
+                onChangeDebounceTimeout: null,
+                place: null,
+            };
+        },
+        mounted() {
+            // Load Google Maps script
+            let gMapScript = document.createElement('script');
+            gMapScript.setAttribute('src', 'https://maps.googleapis.com/maps/api/js?key='+this.apiKey+'&callback=gMapVm.$refs.coordinates.initMap&libraries=places');
+            document.head.appendChild(gMapScript);
+        },
+        methods: {
+            initMap: function() {
+                console.log('initMap');
+                var vm = this;
+
+                var center = vm.points[vm.points.length - 1];
+
+                // Set initial LatLng
+                this.setLatLng(center.lat, center.lng);
+
+                // Create map
+                vm.map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: vm.zoom,
+                    center: new google.maps.LatLng(center.lat, center.lng)
+                });
+
+                // Create marker
+                vm.marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(center.lat, center.lng),
+                    map: vm.map,
+                    draggable: true
+                });
+
+                // Listen to map drag events
+                google.maps.event.addListener(vm.marker, 'drag', vm.onMapDrag);
+
+                // Setup places Autocomplete
+                if (this.showAutocomplete) {
+                    vm.autocomplete = new google.maps.places.Autocomplete(document.getElementById('places-autocomplete'));
+                    places = new google.maps.places.PlacesService(vm.map);
+                    vm.autocomplete.addListener('place_changed', vm.onPlaceChange);
+                }
+            },
+
+            setLatLng: function(lat, lng) {
+                this.lat = lat;
+                this.lng = lng;
+            },
+
+            moveMapAndMarker: function(lat, lng) {
+                this.marker.setPosition(new google.maps.LatLng(lat, lng));
+                this.map.panTo(new google.maps.LatLng(lat, lng));
+            },
+
+            onMapDrag: function(event) {
+                this.setLatLng(event.latLng.lat(), event.latLng.lng());
+
+                this.onChange('mapDragged');
+            },
+
+            onInputKeyPress: function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                }
+            },
+
+            onPlaceChange: function() {
+                this.place = this.autocomplete.getPlace();
+
+                if (this.place.geometry) {
+                    this.setLatLng(this.place.geometry.location.lat(), this.place.geometry.location.lng());
+                    this.moveMapAndMarker(this.place.geometry.location.lat(), this.place.geometry.location.lng());
+                }
+
+                this.onChange('placeChanged');
+            },
+
+            onLatLngInputChange: function(event) {
+                this.moveMapAndMarker(this.lat, this.lng);
+
+                this.onChange('latLngChanged');
+            },
+
+            onChange: function(eventType) {
+                console.log('eventType', eventType);
+                // commented out vendor/tcg/voyager/resources/views/formfields/coordinates.blade.php -> onChange
+            },
+        }
+    });
+</script>
+@endpush()
+@endonce()

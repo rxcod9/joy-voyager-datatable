@@ -55,6 +55,12 @@
     @if(config('dashboard.data_tables.responsive'))
         <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
     @endif
+    <style>
+        .modal-body {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
 @stop
 
 @section('javascript')
