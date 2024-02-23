@@ -50,9 +50,9 @@
             success: function (response) {
                 btn.button('reset');
 
-                $('#quick_create_modal{{ $dataId }}').modal('show');
-
                 $('#quick_create_modal{{ $dataId }} .modal-body').html(response);
+
+                $('#quick_create_modal{{ $dataId }}').modal('show');
 
                 window.gMapVm = new Vue({ el: '#coordinates-formfield' });
 
