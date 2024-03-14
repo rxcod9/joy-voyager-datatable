@@ -21,7 +21,7 @@
         "illuminate/support": "^7|^8|^9|^10",
         "joy/voyager-core": "^1.0|^2.0|^3.0",
         "tcg/voyager": "^1.4|dev-1.6-l10",
-        "yajra/laravel-datatables-oracle": "~9.0|~10.0"
+        "yajra/laravel-datatables-oracle": "11.0.0"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
